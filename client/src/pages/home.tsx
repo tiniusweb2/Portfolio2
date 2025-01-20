@@ -5,6 +5,7 @@ import { SkillsGrid } from "@/components/custom/skills-grid";
 import { MediaLibrary } from "@/components/custom/media-library";
 import { MediaPlayer } from "@/components/custom/media-player";
 import { ThemeToggle } from "@/components/custom/theme-toggle";
+import { ProfessionalProfile } from "@/components/custom/professional-profile";
 
 const createParticle = () => ({
   id: Math.random(),
@@ -16,7 +17,7 @@ const createParticle = () => ({
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
-  const [particles] = useState(() => 
+  const [particles] = useState(() =>
     Array.from({ length: 50 }, createParticle)
   );
 
@@ -66,6 +67,10 @@ export default function Home() {
       </motion.header>
 
       <main className="container mx-auto px-4">
+        <section className="mb-12">
+          <ProfessionalProfile />
+        </section>
+
         <section className="mb-12">
           <h2 className="text-2xl font-bold text-blue-700 dark:text-blue-300 mb-6 ps2-text-glow">
             Skills & Expertise

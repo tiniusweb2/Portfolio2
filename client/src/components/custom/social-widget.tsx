@@ -34,15 +34,15 @@ export function SocialWidget() {
           href="https://github.com/tiniusweb2"
           target="_blank"
           rel="noopener noreferrer"
-          className="block"
+          className="block h-full"
         >
-          <Card className="bg-gradient-to-br from-gray-900 to-gray-800 text-white overflow-hidden">
+          <Card className="bg-gradient-to-br from-gray-900 to-gray-800 text-white h-full">
             <CardContent className="p-6">
               <div className="flex items-center mb-4">
                 <SiGithub className="w-8 h-8 mr-3" />
                 <h3 className="text-xl font-bold">GitHub</h3>
               </div>
-              
+
               {isLoading ? (
                 <div className="space-y-2">
                   <div className="h-4 bg-gray-700 rounded animate-pulse" />
@@ -81,15 +81,15 @@ export function SocialWidget() {
           href="https://www.linkedin.com/in/tinius-troldmyr-l-536269237"
           target="_blank"
           rel="noopener noreferrer"
-          className="block"
+          className="block h-full"
         >
-          <Card className="bg-gradient-to-br from-blue-600 to-blue-700 text-white overflow-hidden">
+          <Card className="bg-gradient-to-br from-blue-600 to-blue-700 text-white h-full">
             <CardContent className="p-6">
               <div className="flex items-center mb-4">
                 <SiLinkedin className="w-8 h-8 mr-3" />
                 <h3 className="text-xl font-bold">LinkedIn</h3>
               </div>
-              
+
               <div className="space-y-2">
                 <div className="flex items-center">
                   <User className="w-5 h-5 mr-2" />

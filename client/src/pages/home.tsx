@@ -6,39 +6,27 @@ import { MediaLibrary } from "@/components/custom/media-library";
 import { MediaPlayer } from "@/components/custom/media-player";
 import { ThemeToggle } from "@/components/custom/theme-toggle";
 import { ProfessionalProfile } from "@/components/custom/professional-profile";
-import { HeroBanner } from "@/components/custom/hero-banner";
-import { BackgroundAnimation } from "@/components/custom/background-animation";
+
+const createParticle = () => ({
+  id: Math.random(),
+  x: Math.random() * window.innerWidth,
+  y: Math.random() * window.innerHeight,
+  directionX: Math.random() * 2 - 1,
+  directionY: Math.random() * 2 - 1,
+});
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
+  const [particles] = useState(() =>
+    Array.from({ length: 50 }, createParticle)
+  );
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 3000);
 
-    // Set up intersection observer for scroll reveal animations
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      },
-      {
-        threshold: 0.1,
-        rootMargin: "50px",
-      }
-    );
-
-    // Observe all scroll-reveal elements
-    document.querySelectorAll('.scroll-reveal').forEach((el) => observer.observe(el));
-
-    return () => {
-      clearTimeout(timer);
-      observer.disconnect();
-    };
+    return () => clearTimeout(timer);
   }, []);
 
   if (isLoading) {
@@ -47,32 +35,54 @@ export default function Home() {
 
   return (
     <div className="ps2-container ps2-cursor">
-      <BackgroundAnimation />
+      {particles.map((particle) => (
+        <div
+          key={particle.id}
+          className="particle"
+          style={{
+            left: `${particle.x}px`,
+            top: `${particle.y}px`,
+            '--direction-x': particle.directionX,
+            '--direction-y': particle.directionY,
+          } as React.CSSProperties}
+        />
+      ))}
 
-      <header className="relative z-10">
-        <div className="absolute top-4 right-4">
+      <motion.header
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="p-8"
+      >
+        <div className="flex justify-between items-center max-w-6xl mx-auto">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-6xl font-bold text-blue-600 dark:text-blue-400 ps2-text-glow">
+              Developer Portfolio
+            </h1>
+            <p className="mt-4 text-blue-800 dark:text-blue-300">
+              Welcome to my PlayStation 2 inspired portfolio
+            </p>
+          </div>
           <ThemeToggle />
         </div>
-        <HeroBanner />
-      </header>
+      </motion.header>
 
       <main className="container mx-auto px-4">
-        <section className="mb-12 scroll-reveal parallax-section">
+        <section className="mb-12">
           <ProfessionalProfile />
         </section>
 
-        <section className="mb-12 scroll-reveal parallax-section">
+        <section className="mb-12">
           <h2 className="text-2xl font-bold text-blue-700 dark:text-blue-300 mb-6 ps2-text-glow">
             Skills & Expertise
           </h2>
           <SkillsGrid />
         </section>
 
-        <section className="mb-12 scroll-reveal parallax-section">
+        <section className="mb-12">
           <MediaLibrary />
         </section>
 
-        <section className="mb-12 scroll-reveal parallax-section">
+        <section className="mb-12">
           <h2 className="text-2xl font-bold text-blue-700 dark:text-blue-300 mb-6 ps2-text-glow">
             Media Player
           </h2>

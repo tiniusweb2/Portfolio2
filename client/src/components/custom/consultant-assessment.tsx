@@ -304,7 +304,7 @@ export function ConsultantAssessment() {
           )}
         </AnimatePresence>
 
-        <CardHeader className="text-xl font-bold text-blue-600 dark:text-blue-400">
+        <CardHeader className="text-xl font-bold text-blue-600 dark:text-blue-400 px-4 sm:px-6">
           {!isComplete
             ? "Digital Consultation Assessment"
             : showForm
@@ -313,31 +313,32 @@ export function ConsultantAssessment() {
           }
         </CardHeader>
 
-        <CardContent>
+        <CardContent className="px-4 sm:px-6">
           {!isComplete ? (
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="space-y-6"
+              className="space-y-4 sm:space-y-6"
             >
               <h3 className="text-lg font-medium mb-4 text-blue-800 dark:text-blue-200">
                 {questions[currentStep].text}
               </h3>
-              <div className="space-y-3">
+              <div className="space-y-2 sm:space-y-3">
                 {questions[currentStep].options.map((option) => (
                   <motion.div
                     key={option.value}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
+                    className="w-full"
                   >
                     <Button
-                      className="w-full justify-start text-left h-auto py-3 bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800"
+                      className="w-full justify-start text-left h-auto py-3 px-4 bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800 text-sm sm:text-base"
                       variant="outline"
                       onClick={() => handleAnswer(option.value)}
                     >
                       {option.label}
-                      <ArrowRight className="ml-auto h-4 w-4" />
+                      <ArrowRight className="ml-auto h-4 w-4 flex-shrink-0" />
                     </Button>
                   </motion.div>
                 ))}
@@ -347,93 +348,21 @@ export function ConsultantAssessment() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="space-y-6"
+              className="space-y-4 sm:space-y-6"
             >
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Name</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            placeholder="Your Name"
-                            className="bg-blue-50 dark:bg-blue-900/50"
-                            disabled={contactMutation.isPending}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            placeholder="Your Email"
-                            type="email"
-                            className="bg-blue-50 dark:bg-blue-900/50"
-                            disabled={contactMutation.isPending}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="preferredContact"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Preferred Contact Method</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                          disabled={contactMutation.isPending}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select contact method" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {contactMethods.map(({ value, label, icon: Icon }) => (
-                              <SelectItem key={value} value={value}>
-                                <div className="flex items-center gap-2">
-                                  <Icon className="h-4 w-4" />
-                                  <span>{label}</span>
-                                </div>
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  {form.watch("preferredContact") === "phone" && (
+                  <div className="grid gap-4 sm:grid-cols-2">
                     <FormField
                       control={form.control}
-                      name="phone"
+                      name="name"
                       render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Phone Number</FormLabel>
+                        <FormItem className="sm:col-span-2">
+                          <FormLabel>Name</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
-                              placeholder="Your Phone Number"
-                              type="tel"
+                              placeholder="Your Name"
                               className="bg-blue-50 dark:bg-blue-900/50"
                               disabled={contactMutation.isPending}
                             />
@@ -442,83 +371,157 @@ export function ConsultantAssessment() {
                         </FormItem>
                       )}
                     />
-                  )}
 
-                  {form.watch("preferredContact") === "meet" && (
-                    <>
-                      <FormField
-                        control={form.control}
-                        name="meetingDate"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-col">
-                            <FormLabel>Meeting Date</FormLabel>
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <FormControl>
-                                  <Button
-                                    variant="outline"
-                                    className={cn(
-                                      "w-full pl-3 text-left font-normal",
-                                      !field.value && "text-muted-foreground"
-                                    )}
-                                    disabled={contactMutation.isPending}
-                                  >
-                                    {field.value ? (
-                                      format(field.value, "PPP")
-                                    ) : (
-                                      <span>Pick a date</span>
-                                    )}
-                                    <Calendar className="ml-auto h-4 w-4 opacity-50" />
-                                  </Button>
-                                </FormControl>
-                              </PopoverTrigger>
-                              <PopoverContent className="w-auto p-0" align="start">
-                                <CalendarComponent
-                                  mode="single"
-                                  selected={field.value}
-                                  onSelect={field.onChange}
-                                  disabled={(date) =>
-                                    date < new Date() || date > new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
-                                  }
-                                  initialFocus
-                                />
-                              </PopoverContent>
-                            </Popover>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="meetingTime"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Meeting Time</FormLabel>
-                            <Select
-                              onValueChange={field.onChange}
-                              defaultValue={field.value}
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem className="sm:col-span-2">
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              placeholder="Your Email"
+                              type="email"
+                              className="bg-blue-50 dark:bg-blue-900/50"
                               disabled={contactMutation.isPending}
-                            >
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select a time" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {availableTimeSlots.map(({ value, label }) => (
-                                  <SelectItem key={value} value={value}>
-                                    {label}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="preferredContact"
+                      render={({ field }) => (
+                        <FormItem className="sm:col-span-2">
+                          <FormLabel>Preferred Contact Method</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                            disabled={contactMutation.isPending}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="bg-blue-50 dark:bg-blue-900/50">
+                                <SelectValue placeholder="Select contact method" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {contactMethods.map(({ value, label, icon: Icon }) => (
+                                <SelectItem key={value} value={value}>
+                                  <div className="flex items-center gap-2">
+                                    <Icon className="h-4 w-4" />
+                                    <span>{label}</span>
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {form.watch("preferredContact") === "meet" && (
+                      <>
+                        <FormField
+                          control={form.control}
+                          name="meetingDate"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Meeting Date</FormLabel>
+                              <Popover>
+                                <PopoverTrigger asChild>
+                                  <FormControl>
+                                    <Button
+                                      variant="outline"
+                                      className={cn(
+                                        "w-full pl-3 text-left font-normal bg-blue-50 dark:bg-blue-900/50",
+                                        !field.value && "text-muted-foreground"
+                                      )}
+                                      disabled={contactMutation.isPending}
+                                    >
+                                      {field.value ? (
+                                        format(field.value, "PPP")
+                                      ) : (
+                                        <span>Pick a date</span>
+                                      )}
+                                      <Calendar className="ml-auto h-4 w-4 opacity-50" />
+                                    </Button>
+                                  </FormControl>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                  <CalendarComponent
+                                    mode="single"
+                                    selected={field.value}
+                                    onSelect={field.onChange}
+                                    disabled={(date) =>
+                                      date < new Date() || date > new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+                                    }
+                                    initialFocus
+                                  />
+                                </PopoverContent>
+                              </Popover>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="meetingTime"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Meeting Time</FormLabel>
+                              <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                                disabled={contactMutation.isPending}
+                              >
+                                <FormControl>
+                                  <SelectTrigger className="bg-blue-50 dark:bg-blue-900/50">
+                                    <SelectValue placeholder="Select a time" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {availableTimeSlots.map(({ value, label }) => (
+                                    <SelectItem key={value} value={value}>
+                                      {label}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </>
+                    )}
+
+                    {form.watch("preferredContact") === "phone" && (
+                      <FormField
+                        control={form.control}
+                        name="phone"
+                        render={({ field }) => (
+                          <FormItem className="sm:col-span-2">
+                            <FormLabel>Phone Number</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                placeholder="Your Phone Number"
+                                type="tel"
+                                className="bg-blue-50 dark:bg-blue-900/50"
+                                disabled={contactMutation.isPending}
+                              />
+                            </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-                    </>
-                  )}
+                    )}
+                  </div>
 
                   <FormField
                     control={form.control}
@@ -539,11 +542,11 @@ export function ConsultantAssessment() {
                     )}
                   />
 
-                  <div className="flex gap-4 pt-4">
+                  <div className="flex flex-col sm:flex-row gap-4 pt-4">
                     <Button
                       type="button"
                       variant="outline"
-                      className="flex-1"
+                      className="w-full sm:flex-1"
                       onClick={() => setShowForm(false)}
                       disabled={contactMutation.isPending}
                     >
@@ -551,7 +554,7 @@ export function ConsultantAssessment() {
                     </Button>
                     <Button
                       type="submit"
-                      className="flex-1 bg-blue-600 hover:bg-blue-500 text-white"
+                      className="w-full sm:flex-1 bg-blue-600 hover:bg-blue-500 text-white"
                       disabled={contactMutation.isPending || retryAfter !== null}
                     >
                       {contactMutation.isPending ? (
@@ -613,7 +616,7 @@ export function ConsultantAssessment() {
           )}
         </CardContent>
 
-        <CardFooter className="justify-between">
+        <CardFooter className="justify-between px-4 sm:px-6">
           {currentStep > 0 && !isComplete && !showForm && (
             <Button
               variant="outline"

@@ -1,18 +1,14 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { PS2Loading } from "@/components/custom/ps2-loading";
-import { SkillsGrid } from "@/components/custom/skills-grid";
 import { BlogGallery } from "@/components/custom/blog-gallery";
-import { MediaPlayer } from "@/components/custom/media-player";
 import { ThemeToggle } from "@/components/custom/theme-toggle";
 import { ProfessionalProfile } from "@/components/custom/professional-profile";
 import { HeroBanner } from "@/components/custom/hero-banner";
-import { GitHubCommits } from "@/components/custom/github-commits";
 import { ConsultantAssessment } from "@/components/custom/consultant-assessment";
 import { SkillsTimeline } from "@/components/custom/skills-timeline";
 import { SocialWidget } from "@/components/custom/social-widget";
 import { SkillEndorsementCarousel } from "@/components/custom/skill-endorsement-carousel";
-import { GitHubContributions } from "@/components/custom/github-contributions";
 
 const createParticle = () => ({
   id: Math.random(),
@@ -71,15 +67,7 @@ export default function Home() {
         </section>
 
         <section className="mb-12">
-          <GitHubContributions />
-        </section>
-
-        <section className="mb-12">
-          <GitHubCommits />
-        </section>
-
-        <section className="mb-12">
-          <SkillEndorsementCarousel />
+          <ProfessionalProfile />
         </section>
 
         <section className="mb-12">
@@ -87,7 +75,7 @@ export default function Home() {
         </section>
 
         <section className="mb-12">
-          <ProfessionalProfile />
+          <SkillEndorsementCarousel />
         </section>
 
         <section className="mb-12">

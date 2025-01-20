@@ -199,14 +199,14 @@ export function ConsultantAssessment() {
 
       successSound.play().catch(console.error);
 
-      const meetingDetails = data.meetingDetails
-        ? `I'll see you at your scheduled meeting. Check your email for the Teams meeting link.`
+      const meetingDetails = formValues.preferredContact === 'meet'
+        ? "Your meeting request has been received. You'll receive a confirmation email with meeting details shortly."
         : formValues.preferredContact === 'phone'
           ? "I'll call you shortly at your provided number"
           : "I'll email you within 24-48 hours";
 
       toast({
-        title: "Message sent successfully! 🎉",
+        title: "Request sent successfully! 🎉",
         description: `Thank you for your interest. ${meetingDetails}`,
       });
 

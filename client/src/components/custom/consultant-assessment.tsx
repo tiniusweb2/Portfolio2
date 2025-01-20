@@ -236,7 +236,7 @@ export function ConsultantAssessment() {
     contactMutation.mutate(data);
   };
 
-  const isComplete = currentStep === questions.length;
+  const isComplete = Object.keys(answers).length === questions.length;
 
   return (
     <ErrorBoundary>

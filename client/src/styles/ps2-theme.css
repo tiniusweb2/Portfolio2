@@ -1,0 +1,42 @@
+@keyframes ps2-boot {
+  0% { opacity: 0; transform: scale(0.9); }
+  50% { opacity: 0.5; transform: scale(1.1); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes ps2-scan {
+  0% { background-position: -100% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.ps2-container {
+  background-color: #000913;
+  min-height: 100vh;
+  color: #e0e7ff;
+}
+
+.ps2-text-glow {
+  text-shadow: 0 0 8px rgba(147, 197, 253, 0.5);
+}
+
+.ps2-card {
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(147, 197, 253, 0.2);
+  backdrop-filter: blur(8px);
+}
+
+.ps2-scan-line {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(147, 197, 253, 0.2),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: ps2-scan 2s linear infinite;
+}
+
+.ps2-cursor {
+  cursor: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='16' cy='16' r='8' stroke='%2393c5fd' stroke-width='2'/%3E%3C/svg%3E"),
+    auto;
+}

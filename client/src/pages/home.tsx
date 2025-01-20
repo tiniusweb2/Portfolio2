@@ -9,6 +9,7 @@ import { ProfessionalProfile } from "@/components/custom/professional-profile";
 import { HeroBanner } from "@/components/custom/hero-banner";
 import { GitHubCommits } from "@/components/custom/github-commits";
 import { ConsultantAssessment } from "@/components/custom/consultant-assessment";
+import { SkillsTimeline } from "@/components/custom/skills-timeline";
 
 const createParticle = () => ({
   id: Math.random(),
@@ -67,18 +68,22 @@ export default function Home() {
         </section>
 
         <section className="mb-12">
+          <SkillsTimeline />
+        </section>
+
+        <section className="mb-12">
           <ProfessionalProfile />
         </section>
 
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-blue-700 dark:text-blue-300 mb-6 ps2-text-glow">
+          <h2 className="text-2xl font-bold text-blue-700 dark:text-blue-300 mb-6">
             Work With Me
           </h2>
           <ConsultantAssessment />
         </section>
 
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-blue-700 dark:text-blue-300 mb-6 ps2-text-glow">
+          <h2 className="text-2xl font-bold text-blue-700 dark:text-blue-300 mb-6">
             Skills & Expertise
           </h2>
           <SkillsGrid />
@@ -89,7 +94,7 @@ export default function Home() {
         </section>
 
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-blue-700 dark:text-blue-300 mb-6 ps2-text-glow">
+          <h2 className="text-2xl font-bold text-blue-700 dark:text-blue-300 mb-6">
             Media Player
           </h2>
           <MediaPlayer />

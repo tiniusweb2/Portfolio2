@@ -4,40 +4,62 @@
   100% { opacity: 1; transform: scale(1); }
 }
 
-@keyframes ps2-scan {
-  0% { background-position: -100% 0; }
-  100% { background-position: 200% 0; }
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes particle-drift {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(var(--drift-x), var(--drift-y)); }
 }
 
 .ps2-container {
-  background-color: #000408;
+  background-color: #f0f5ff;
   min-height: 100vh;
-  color: #e0e7ff;
+  color: #1e3a8a;
+  position: relative;
+  overflow: hidden;
 }
 
 .ps2-text-glow {
-  text-shadow: 0 0 4px rgba(147, 197, 253, 0.3);
+  text-shadow: 0 0 2px rgba(37, 99, 235, 0.2);
 }
 
 .ps2-card {
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(147, 197, 253, 0.15);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(37, 99, 235, 0.15);
   backdrop-filter: blur(12px);
+  transition: transform 0.2s ease;
 }
 
-.ps2-scan-line {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(147, 197, 253, 0.1),
-    transparent
-  );
-  background-size: 200% 100%;
-  animation: ps2-scan 3s linear infinite;
-  opacity: 0.7;
+.ps2-card:hover {
+  transform: translateY(-2px);
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: linear-gradient(45deg, #60a5fa, #3b82f6);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: float 3s ease-in-out infinite;
+}
+
+.particle::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: inherit;
+  border-radius: inherit;
+  animation: particle-drift 10s linear infinite;
+  --drift-x: calc(100px * var(--direction-x));
+  --drift-y: calc(100px * var(--direction-y));
 }
 
 .ps2-cursor {
-  cursor: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='16' cy='16' r='8' stroke='%2393c5fd' stroke-width='2'/%3E%3C/svg%3E"),
+  cursor: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='16' cy='16' r='8' stroke='%233b82f6' stroke-width='2'/%3E%3C/svg%3E"),
     auto;
 }

@@ -4,9 +4,8 @@ import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
-import "./styles/ps2-theme.css";
 import { useState } from "react";
-import { PS2BootSequence } from "@/components/custom/ps2-boot-sequence";
+import { BootSequence } from "@/components/custom/boot-sequence";
 import { Footer } from "@/components/custom/footer";
 
 function Router() {
@@ -24,7 +23,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       {showBootSequence ? (
-        <PS2BootSequence onComplete={() => setShowBootSequence(false)} />
+        <BootSequence onComplete={() => setShowBootSequence(false)} />
       ) : (
         <div className="min-h-screen flex flex-col">
           <main className="flex-grow">

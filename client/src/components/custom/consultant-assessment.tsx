@@ -272,7 +272,7 @@ export function ConsultantAssessment() {
 
   return (
     <ErrorBoundary>
-      <Card className="ps2-card w-full max-w-2xl mx-auto relative overflow-hidden">
+      <Card className="w-full max-w-2xl mx-auto relative overflow-hidden">
         <AnimatePresence>
           {showSuccess && (
             <motion.div
@@ -304,7 +304,7 @@ export function ConsultantAssessment() {
           )}
         </AnimatePresence>
 
-        <CardHeader className="text-xl font-bold text-blue-600 dark:text-blue-400 ps2-text-glow">
+        <CardHeader className="text-xl font-bold text-blue-600 dark:text-blue-400">
           {!isComplete
             ? "Digital Consultation Assessment"
             : showForm

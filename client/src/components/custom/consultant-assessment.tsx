@@ -2,8 +2,13 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, ArrowRight } from "lucide-react";
+import { CheckCircle, ArrowRight, Mail } from "lucide-react";
 import { ErrorBoundary } from "./error-boundary";
+import { useForm } from "react-hook-form";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 const questions = [
   {
@@ -59,16 +64,33 @@ const recommendations = {
   // Add more specific combinations as needed
 };
 
+const emailSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email address"),
+  message: z.string().optional(),
+});
+
+type EmailFormData = z.infer<typeof emailSchema>;
+
 export function ConsultantAssessment() {
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const { toast } = useToast();
+  const form = useForm<EmailFormData>({
+    resolver: zodResolver(emailSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      message: "",
+    },
+  });
 
   const handleAnswer = (value: string) => {
     setAnswers({
       ...answers,
       [questions[currentStep].id]: value
     });
-    
+
     if (currentStep < questions.length - 1) {
       setCurrentStep(currentStep + 1);
     }
@@ -83,6 +105,39 @@ export function ConsultantAssessment() {
     };
   };
 
+  const onSubmit = async (data: EmailFormData) => {
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...data,
+          answers,
+          recommendation: getRecommendation().title,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to send message");
+      }
+
+      toast({
+        title: "Message sent!",
+        description: "I'll get back to you as soon as possible.",
+      });
+
+      form.reset();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const isComplete = currentStep === questions.length;
 
   return (
@@ -91,7 +146,7 @@ export function ConsultantAssessment() {
         <CardHeader className="text-xl font-bold text-blue-600 dark:text-blue-400 ps2-text-glow">
           {!isComplete ? "Digital Consultation Assessment" : "Your Recommended Solution"}
         </CardHeader>
-        
+
         <CardContent>
           {!isComplete ? (
             <motion.div
@@ -147,6 +202,48 @@ export function ConsultantAssessment() {
                   </motion.div>
                 ))}
               </div>
+
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-6">
+                <div className="space-y-2">
+                  <Input
+                    {...form.register("name")}
+                    placeholder="Your Name"
+                    className="bg-blue-50 dark:bg-blue-900/50"
+                  />
+                  {form.formState.errors.name && (
+                    <p className="text-sm text-red-500">{form.formState.errors.name.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Input
+                    {...form.register("email")}
+                    placeholder="Your Email"
+                    type="email"
+                    className="bg-blue-50 dark:bg-blue-900/50"
+                  />
+                  {form.formState.errors.email && (
+                    <p className="text-sm text-red-500">{form.formState.errors.email.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Input
+                    {...form.register("message")}
+                    placeholder="Additional Message (Optional)"
+                    className="bg-blue-50 dark:bg-blue-900/50"
+                  />
+                </div>
+
+                <Button 
+                  type="submit"
+                  className="w-full bg-blue-600 hover:bg-blue-500 text-white"
+                  disabled={form.formState.isSubmitting}
+                >
+                  <Mail className="mr-2 h-4 w-4" />
+                  Request Consultation
+                </Button>
+              </form>
             </motion.div>
           )}
         </CardContent>
@@ -159,14 +256,6 @@ export function ConsultantAssessment() {
               className="bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800"
             >
               Back
-            </Button>
-          )}
-          {isComplete && (
-            <Button 
-              className="w-full bg-blue-600 hover:bg-blue-500 text-white"
-              onClick={() => window.location.href = "mailto:your-email@example.com"}
-            >
-              Schedule a Consultation
             </Button>
           )}
         </CardFooter>

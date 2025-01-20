@@ -3,85 +3,63 @@ import { motion } from "framer-motion";
 import useEmblaCarousel from 'embla-carousel-react';
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, ThumbsUp } from "lucide-react";
-import { SkillDemoModal } from "./skill-demo-modal";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
-interface Skill {
+interface Testimonial {
   id: string;
   name: string;
-  description: string;
-  endorsements: number;
+  role: string;
+  company: string;
+  content: string;
+  avatarUrl?: string;
 }
 
-const skills: Skill[] = [
+const testimonials: Testimonial[] = [
   {
-    id: "react",
-    name: "React",
-    description: "Expert in React ecosystem, including Hooks, Context, and Redux",
-    endorsements: 42
+    id: "1",
+    name: "Sarah Johnson",
+    role: "CTO",
+    company: "TechVision Inc",
+    content: "Tinius delivered exceptional results for our web application project. His expertise in React and TypeScript significantly improved our development workflow.",
+    avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330"
   },
   {
-    id: "typescript",
-    name: "TypeScript",
-    description: "Strong typing, interfaces, and advanced TypeScript patterns",
-    endorsements: 35
+    id: "2",
+    name: "Michael Chen",
+    role: "Product Manager",
+    company: "InnovateLab",
+    content: "Working with Tinius was a game-changer for our team. His technical leadership and communication skills made complex projects feel manageable.",
+    avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d"
   },
   {
-    id: "nodejs",
-    name: "Node.js",
-    description: "Server-side JavaScript, Express.js, and API development",
-    endorsements: 38
-  },
-  {
-    id: "css",
-    name: "CSS/SCSS",
-    description: "Modern CSS, animations, responsive design, and CSS-in-JS",
-    endorsements: 40
-  },
-  {
-    id: "graphql",
-    name: "GraphQL",
-    description: "API design, schema definition, and query optimization",
-    endorsements: 28
-  },
-  {
-    id: "git",
-    name: "Git",
-    description: "Version control, branching strategies, and collaborative development",
-    endorsements: 45
+    id: "3",
+    name: "Emma Wilson",
+    role: "Engineering Director",
+    company: "CloudScale Solutions",
+    content: "The quality of work and attention to detail exceeded our expectations. Tinius brings both technical excellence and strategic thinking to every project.",
+    avatarUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80"
   }
 ];
 
 export function SkillEndorsementCarousel() {
-  const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
-  const [endorsements, setEndorsements] = useState<Record<string, boolean>>({});
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
     loop: true,
     align: 'center',
     slidesToScroll: 1
   });
 
-  const handleEndorse = (skillId: string) => {
-    if (!endorsements[skillId]) {
-      setEndorsements(prev => ({ ...prev, [skillId]: true }));
-      const skill = skills.find(s => s.id === skillId);
-      if (skill) {
-        skill.endorsements += 1;
-      }
-    }
-  };
-
   return (
     <div className="relative py-8">
       <h2 className="text-2xl font-bold text-center mb-8 text-blue-600 dark:text-blue-400">
-        Skills & Endorsements
+        Client Testimonials
       </h2>
 
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
-          {skills.map((skill) => (
+          {testimonials.map((testimonial) => (
             <div 
-              key={skill.id}
+              key={testimonial.id}
               className="flex-[0_0_100%] min-w-0 md:flex-[0_0_33.33%] px-4"
             >
               <motion.div
@@ -89,39 +67,28 @@ export function SkillEndorsementCarousel() {
                 className="h-full"
               >
                 <Card className="p-6 h-full bg-white dark:bg-gray-800 shadow-lg">
-                  <h3 className="text-xl font-semibold mb-2 text-blue-600 dark:text-blue-400">
-                    {skill.name}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-300 mb-4">
-                    {skill.description}
-                  </p>
-                  <div className="flex justify-between items-center mt-auto">
-                    <Button
-                      variant="outline"
-                      onClick={() => setSelectedSkill(skill.name)}
-                      className="text-blue-500 hover:text-blue-600"
-                    >
-                      View Demo
-                    </Button>
-                    <div className="flex items-center gap-2">
-                      <span className="text-gray-600 dark:text-gray-300">
-                        {skill.endorsements}
-                      </span>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleEndorse(skill.id)}
-                        disabled={endorsements[skill.id]}
-                        className={`transition-colors ${
-                          endorsements[skill.id]
-                            ? 'text-blue-500'
-                            : 'text-gray-400 hover:text-blue-500'
-                        }`}
-                      >
-                        <ThumbsUp className="h-5 w-5" />
-                      </Button>
+                  <div className="flex items-center mb-4">
+                    <Avatar className="h-12 w-12">
+                      <AvatarImage
+                        src={testimonial.avatarUrl}
+                        alt={testimonial.name}
+                      />
+                      <AvatarFallback>
+                        {testimonial.name.split(' ').map(n => n[0]).join('')}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="ml-4">
+                      <h3 className="text-lg font-semibold text-blue-600 dark:text-blue-400">
+                        {testimonial.name}
+                      </h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {testimonial.role} at {testimonial.company}
+                      </p>
                     </div>
                   </div>
+                  <p className="text-gray-600 dark:text-gray-300 italic">
+                    "{testimonial.content}"
+                  </p>
                 </Card>
               </motion.div>
             </div>
@@ -150,12 +117,6 @@ export function SkillEndorsementCarousel() {
           </Button>
         </>
       )}
-
-      <SkillDemoModal
-        skill={selectedSkill}
-        isOpen={!!selectedSkill}
-        onClose={() => setSelectedSkill(null)}
-      />
     </div>
   );
 }

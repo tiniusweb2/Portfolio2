@@ -93,13 +93,6 @@ export default function Home() {
         </section>
 
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-blue-700 dark:text-blue-300 mb-6">
-            Skills & Expertise
-          </h2>
-          <SkillsGrid />
-        </section>
-
-        <section className="mb-12">
           <BlogGallery />
         </section>
       </main>

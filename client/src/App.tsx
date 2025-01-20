@@ -5,6 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import "./styles/ps2-theme.css";
+import { useState } from "react";
+import { PS2BootSequence } from "@/components/custom/ps2-boot-sequence";
 
 function Router() {
   return (
@@ -16,10 +18,18 @@ function Router() {
 }
 
 function App() {
+  const [showBootSequence, setShowBootSequence] = useState(true);
+
   return (
     <QueryClientProvider client={queryClient}>
-      <Router />
-      <Toaster />
+      {showBootSequence ? (
+        <PS2BootSequence onComplete={() => setShowBootSequence(false)} />
+      ) : (
+        <>
+          <Router />
+          <Toaster />
+        </>
+      )}
     </QueryClientProvider>
   );
 }

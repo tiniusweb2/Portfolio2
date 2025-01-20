@@ -1,8 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { GitBranch, Calendar, User } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { GitBranch, Calendar, User, ChevronDown, ChevronUp } from "lucide-react";
 import { ErrorBoundary } from "./error-boundary";
+import { useState } from "react";
 
 interface Commit {
   repo: string;
@@ -26,6 +28,7 @@ function CommitCard({ commit }: { commit: Commit }) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
       whileHover={{ scale: 1.02 }}
       className="mb-4"
     >
@@ -47,11 +50,11 @@ function CommitCard({ commit }: { commit: Commit }) {
               {commit.sha}
             </a>
           </div>
-          
+
           <p className="text-sm text-blue-800 dark:text-blue-200 line-clamp-2">
             {commit.message}
           </p>
-          
+
           <div className="flex items-center justify-between text-xs text-blue-600 dark:text-blue-400">
             <div className="flex items-center space-x-2">
               <User className="h-3 w-3" />
@@ -69,6 +72,7 @@ function CommitCard({ commit }: { commit: Commit }) {
 }
 
 function CommitsContent() {
+  const [isExpanded, setIsExpanded] = useState(false);
   const { data: commits, isLoading, error } = useQuery<Commit[]>({
     queryKey: ['/api/github/commits'],
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -94,11 +98,42 @@ function CommitsContent() {
     );
   }
 
+  const displayedCommits = isExpanded ? commits : commits?.slice(0, 3);
+
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {commits?.map((commit, index) => (
-        <CommitCard key={commit.sha + index} commit={commit} />
-      ))}
+    <div className="space-y-4">
+      <AnimatePresence mode="wait">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {displayedCommits?.map((commit, index) => (
+            <CommitCard key={commit.sha + index} commit={commit} />
+          ))}
+        </div>
+      </AnimatePresence>
+
+      {commits && commits.length > 3 && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex justify-center mt-6"
+        >
+          <Button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="bg-blue-600 hover:bg-blue-500 text-white group"
+          >
+            {isExpanded ? (
+              <>
+                Show Less
+                <ChevronUp className="ml-2 h-4 w-4 transition-transform group-hover:-translate-y-1" />
+              </>
+            ) : (
+              <>
+                Show More
+                <ChevronDown className="ml-2 h-4 w-4 transition-transform group-hover:translate-y-1" />
+              </>
+            )}
+          </Button>
+        </motion.div>
+      )}
     </div>
   );
 }
@@ -109,7 +144,7 @@ export function GitHubCommits() {
       <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-8 ps2-text-glow">
         Recent GitHub Activity
       </h2>
-      
+
       <ErrorBoundary>
         <CommitsContent />
       </ErrorBoundary>

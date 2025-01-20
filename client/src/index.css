@@ -11,3 +11,24 @@
     @apply font-sans antialiased bg-background text-foreground;
   }
 }
+
+/* GitHub Contribution Level Colors */
+.contribution-level-0 {
+  @apply bg-gray-100 dark:bg-gray-800;
+}
+
+.contribution-level-1 {
+  @apply bg-emerald-200 dark:bg-emerald-900;
+}
+
+.contribution-level-2 {
+  @apply bg-emerald-300 dark:bg-emerald-700;
+}
+
+.contribution-level-3 {
+  @apply bg-emerald-400 dark:bg-emerald-600;
+}
+
+.contribution-level-4 {
+  @apply bg-emerald-500 dark:bg-emerald-500;
+}

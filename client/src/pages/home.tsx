@@ -12,6 +12,7 @@ import { ConsultantAssessment } from "@/components/custom/consultant-assessment"
 import { SkillsTimeline } from "@/components/custom/skills-timeline";
 import { SocialWidget } from "@/components/custom/social-widget";
 import { SkillEndorsementCarousel } from "@/components/custom/skill-endorsement-carousel";
+import { GitHubContributions } from "@/components/custom/github-contributions";
 
 const createParticle = () => ({
   id: Math.random(),
@@ -67,6 +68,10 @@ export default function Home() {
       <main className="container mx-auto px-4 pt-12">
         <section className="mb-12">
           <SocialWidget />
+        </section>
+
+        <section className="mb-12">
+          <GitHubContributions />
         </section>
 
         <section className="mb-12">

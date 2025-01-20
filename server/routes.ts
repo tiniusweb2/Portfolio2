@@ -244,6 +244,64 @@ export function registerRoutes(app: Express): Server {
     }
   });
 
+  // Add new GitHub contributions endpoint
+  app.get('/api/github/contributions', async (req, res) => {
+    const token = process.env.GITHUB_TOKEN;
+    if (!token) {
+      return res.status(500).json({ message: 'GitHub token not configured' });
+    }
+
+    try {
+      // Get user's events for the last year
+      const response = await fetch(
+        'https://api.github.com/users/TiniusTheDev/events',
+        {
+          headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch GitHub events');
+      }
+
+      const events = await response.json() as any[];
+
+      // Process events into daily contributions
+      const contributions = new Map<string, number>();
+      const today = new Date();
+      const oneYearAgo = new Date(today);
+      oneYearAgo.setFullYear(today.getFullYear() - 1);
+
+      // Initialize all dates in the last year with 0 contributions
+      for (let d = new Date(oneYearAgo); d <= today; d.setDate(d.getDate() + 1)) {
+        contributions.set(d.toISOString().split('T')[0], 0);
+      }
+
+      // Count contributions from events
+      events.forEach(event => {
+        const date = event.created_at.split('T')[0];
+        if (contributions.has(date)) {
+          contributions.set(date, (contributions.get(date) || 0) + 1);
+        }
+      });
+
+      // Convert map to array of objects
+      const contributionsArray = Array.from(contributions.entries()).map(([date, count]) => ({
+        date,
+        count
+      }));
+
+      res.json(contributionsArray);
+    } catch (error) {
+      console.error('GitHub API Error:', error);
+      res.status(500).json({ message: 'Failed to fetch GitHub contributions' });
+    }
+  });
+
+
   // Blog posts endpoints
   app.get('/api/blog/posts', async (req, res) => {
     try {

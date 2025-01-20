@@ -4,6 +4,7 @@ import { PS2Loading } from "@/components/custom/ps2-loading";
 import { SkillsGrid } from "@/components/custom/skills-grid";
 import { MediaLibrary } from "@/components/custom/media-library";
 import { MediaPlayer } from "@/components/custom/media-player";
+import { ThemeToggle } from "@/components/custom/theme-toggle";
 
 const createParticle = () => ({
   id: Math.random(),
@@ -49,19 +50,24 @@ export default function Home() {
       <motion.header
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="p-8 text-center"
+        className="p-8"
       >
-        <h1 className="text-4xl md:text-6xl font-bold text-blue-600 ps2-text-glow">
-          Developer Portfolio
-        </h1>
-        <p className="mt-4 text-blue-800">
-          Welcome to my PlayStation 2 inspired portfolio
-        </p>
+        <div className="flex justify-between items-center max-w-6xl mx-auto">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-6xl font-bold text-blue-600 dark:text-blue-400 ps2-text-glow">
+              Developer Portfolio
+            </h1>
+            <p className="mt-4 text-blue-800 dark:text-blue-300">
+              Welcome to my PlayStation 2 inspired portfolio
+            </p>
+          </div>
+          <ThemeToggle />
+        </div>
       </motion.header>
 
       <main className="container mx-auto px-4">
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-blue-700 mb-6 ps2-text-glow">
+          <h2 className="text-2xl font-bold text-blue-700 dark:text-blue-300 mb-6 ps2-text-glow">
             Skills & Expertise
           </h2>
           <SkillsGrid />
@@ -72,14 +78,14 @@ export default function Home() {
         </section>
 
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-blue-700 mb-6 ps2-text-glow">
+          <h2 className="text-2xl font-bold text-blue-700 dark:text-blue-300 mb-6 ps2-text-glow">
             Media Player
           </h2>
           <MediaPlayer />
         </section>
       </main>
 
-      <footer className="text-center p-8 text-blue-700">
+      <footer className="text-center p-8 text-blue-700 dark:text-blue-300">
         <p>© 2024 Developer Portfolio. PlayStation 2 Inspired.</p>
       </footer>
     </div>

@@ -9,7 +9,6 @@ import { ConsultantAssessment } from "@/components/custom/consultant-assessment"
 import { SkillsTimeline } from "@/components/custom/skills-timeline";
 import { SocialWidget } from "@/components/custom/social-widget";
 import { SkillEndorsementCarousel } from "@/components/custom/skill-endorsement-carousel";
-import { Footer } from "@/components/custom/footer";
 
 const createParticle = () => ({
   id: Math.random(),
@@ -90,8 +89,6 @@ export default function Home() {
           <BlogGallery />
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 }

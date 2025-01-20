@@ -24,7 +24,7 @@ export function BlogGallery() {
   if (isLoading) {
     return (
       <div className="p-4">
-        <h2 className="text-2xl font-bold text-blue-300 mb-6 ps2-text-glow">
+        <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-300 mb-6 ps2-text-glow">
           Blog Articles
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -42,7 +42,7 @@ export function BlogGallery() {
   if (!articles?.length) {
     return (
       <div className="p-4 text-center">
-        <h2 className="text-2xl font-bold text-blue-300 mb-6 ps2-text-glow">
+        <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-300 mb-6 ps2-text-glow">
           Blog Articles
         </h2>
         <p className="text-blue-400">No articles published yet.</p>
@@ -52,7 +52,7 @@ export function BlogGallery() {
 
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-bold text-blue-300 mb-6 ps2-text-glow">
+      <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-300 mb-6 ps2-text-glow">
         Blog Articles
       </h2>
 

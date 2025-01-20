@@ -38,32 +38,32 @@ import { cn } from "@/lib/utils";
 const questions = [
   {
     id: "business_stage",
-    text: "What best describes your current business situation?",
+    text: "Your business status:",
     options: [
-      { value: "startup", label: "Starting a new digital venture or startup" },
-      { value: "growth", label: "Established business looking to grow online" },
-      { value: "optimization", label: "Need to improve existing digital systems" },
-      { value: "transformation", label: "Looking for complete digital transformation" }
+      { value: "startup", label: "New digital venture" },
+      { value: "growth", label: "Growing existing business" },
+      { value: "optimization", label: "Improving current systems" },
+      { value: "transformation", label: "Digital transformation" }
     ]
   },
   {
     id: "pain_points",
-    text: "What's your biggest challenge right now?",
+    text: "Main challenge:",
     options: [
-      { value: "technical", label: "Technical infrastructure & development" },
-      { value: "marketing", label: "Digital marketing & customer acquisition" },
-      { value: "ux", label: "User experience & conversion optimization" },
-      { value: "strategy", label: "Overall digital strategy & direction" }
+      { value: "technical", label: "Technical & Development" },
+      { value: "marketing", label: "Digital Marketing" },
+      { value: "ux", label: "UX & Conversion" },
+      { value: "strategy", label: "Digital Strategy" }
     ]
   },
   {
     id: "timeline",
-    text: "What's your desired timeline for seeing results?",
+    text: "Preferred timeline:",
     options: [
-      { value: "urgent", label: "ASAP - Critical business need" },
-      { value: "quarter", label: "Within this quarter" },
+      { value: "urgent", label: "ASAP" },
+      { value: "quarter", label: "This quarter" },
       { value: "sixmonths", label: "Within 6 months" },
-      { value: "longterm", label: "Long-term partnership" }
+      { value: "longterm", label: "Long-term" }
     ]
   }
 ];
@@ -304,27 +304,30 @@ export function ConsultantAssessment() {
           )}
         </AnimatePresence>
 
-        <CardHeader className="text-xl font-bold text-blue-600 dark:text-blue-400 px-4 sm:px-6">
+        <CardHeader className="text-lg sm:text-xl font-bold text-blue-600 dark:text-blue-400 p-3 sm:p-4">
           {!isComplete
-            ? "Digital Consultation Assessment"
+            ? <span>
+                <span className="hidden sm:inline">Digital Consultation Assessment</span>
+                <span className="sm:hidden">Quick Assessment</span>
+              </span>
             : showForm
-              ? "Complete Your Consultation Request"
-              : "Your Recommended Solution"
+              ? "Complete Request"
+              : "Recommended Solution"
           }
         </CardHeader>
 
-        <CardContent className="px-4 sm:px-6">
+        <CardContent className="p-3 sm:p-4">
           {!isComplete ? (
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="space-y-4 sm:space-y-6"
+              className="space-y-3 sm:space-y-4"
             >
-              <h3 className="text-lg font-medium mb-4 text-blue-800 dark:text-blue-200">
+              <h3 className="text-base sm:text-lg font-medium text-blue-800 dark:text-blue-200 mb-2 sm:mb-4">
                 {questions[currentStep].text}
               </h3>
-              <div className="space-y-2 sm:space-y-3">
+              <div className="space-y-2">
                 {questions[currentStep].options.map((option) => (
                   <motion.div
                     key={option.value}
@@ -333,7 +336,7 @@ export function ConsultantAssessment() {
                     className="w-full"
                   >
                     <Button
-                      className="w-full justify-start text-left h-auto py-3 px-4 bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800 text-sm sm:text-base"
+                      className="w-full justify-start text-left h-auto py-2.5 sm:py-3 px-3 sm:px-4 bg-blue-50 dark:bg-blue-900/50 hover:bg-blue-100 dark:hover:bg-blue-800/70 text-sm"
                       variant="outline"
                       onClick={() => handleAnswer(option.value)}
                     >
@@ -348,11 +351,11 @@ export function ConsultantAssessment() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="space-y-4 sm:space-y-6"
+              className="space-y-3 sm:space-y-4"
             >
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                  <div className="grid gap-4 sm:grid-cols-2">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 sm:space-y-4">
+                  <div className="grid gap-3 sm:gap-4">
                     <FormField
                       control={form.control}
                       name="name"
@@ -542,11 +545,11 @@ export function ConsultantAssessment() {
                     )}
                   />
 
-                  <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 pt-2 sm:pt-4">
                     <Button
                       type="button"
                       variant="outline"
-                      className="w-full sm:flex-1"
+                      className="w-full sm:w-auto order-2 sm:order-1"
                       onClick={() => setShowForm(false)}
                       disabled={contactMutation.isPending}
                     >
@@ -554,23 +557,23 @@ export function ConsultantAssessment() {
                     </Button>
                     <Button
                       type="submit"
-                      className="w-full sm:flex-1 bg-blue-600 hover:bg-blue-500 text-white"
+                      className="w-full sm:w-auto order-1 sm:order-2 bg-blue-600 hover:bg-blue-500 text-white"
                       disabled={contactMutation.isPending || retryAfter !== null}
                     >
                       {contactMutation.isPending ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Sending...
+                          <span className="text-sm">Sending...</span>
                         </>
                       ) : retryAfter !== null ? (
                         <>
                           <Clock className="mr-2 h-4 w-4" />
-                          Retry in {retryAfter}s
+                          <span className="text-sm">Retry in {retryAfter}s</span>
                         </>
                       ) : (
                         <>
                           <Mail className="mr-2 h-4 w-4" />
-                          Submit Request
+                          <span className="text-sm">Submit</span>
                         </>
                       )}
                     </Button>
@@ -582,12 +585,12 @@ export function ConsultantAssessment() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="space-y-6"
+              className="space-y-4"
             >
-              <h2 className="text-xl font-bold text-blue-600 dark:text-blue-400">
+              <h2 className="text-lg sm:text-xl font-bold text-blue-600 dark:text-blue-400">
                 {getRecommendation(answers).title}
               </h2>
-              <p className="text-blue-800 dark:text-blue-200">
+              <p className="text-sm sm:text-base text-blue-800 dark:text-blue-200">
                 {getRecommendation(answers).description}
               </p>
               <div className="space-y-2">
@@ -597,31 +600,31 @@ export function ConsultantAssessment() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className="flex items-center space-x-2"
+                    className="flex items-center gap-2"
                   >
-                    <CheckCircle className="h-5 w-5 text-green-500" />
-                    <span className="text-blue-700 dark:text-blue-300">{service}</span>
+                    <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-sm sm:text-base text-blue-700 dark:text-blue-300">{service}</span>
                   </motion.div>
                 ))}
               </div>
 
               <Button
                 onClick={() => setShowForm(true)}
-                className="w-full bg-blue-600 hover:bg-blue-500 text-white mt-6"
+                className="w-full bg-blue-600 hover:bg-blue-500 text-white mt-4 sm:mt-6 py-2 sm:py-3"
               >
                 <ArrowRight className="mr-2 h-4 w-4" />
-                Continue to Request Form
+                <span className="text-sm sm:text-base">Continue to Request</span>
               </Button>
             </motion.div>
           )}
         </CardContent>
 
-        <CardFooter className="justify-between px-4 sm:px-6">
+        <CardFooter className="justify-between p-3 sm:p-4">
           {currentStep > 0 && !isComplete && !showForm && (
             <Button
               variant="outline"
               onClick={() => setCurrentStep(currentStep - 1)}
-              className="bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800"
+              className="bg-blue-50 dark:bg-blue-900/50 hover:bg-blue-100 dark:hover:bg-blue-800/70"
             >
               Back
             </Button>

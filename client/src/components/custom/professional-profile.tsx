@@ -93,41 +93,44 @@ export function ProfessionalProfile() {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
+    <div className="max-w-4xl mx-auto px-2 sm:px-4 py-6 sm:py-12">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-12"
+        className="text-center mb-6 sm:mb-12"
       >
-        <h2 className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-4 ps2-text-glow">
+        <h2 className="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2 sm:mb-4 ps2-text-glow">
           Professional Excellence
         </h2>
-        <p className="text-xl text-blue-800 dark:text-blue-300">
+        <p className="text-base sm:text-xl text-blue-800 dark:text-blue-300 px-4">
           Independent consultant delivering strategic value through technical expertise and leadership
         </p>
       </motion.div>
 
-      <div className="space-y-4">
+      <div className="space-y-2 sm:space-y-4">
         {profileData.map((category) => (
-          <Card key={category.id} className="ps2-card overflow-hidden">
-            <motion.div
-              className="p-4 cursor-pointer"
+          <Card 
+            key={category.id} 
+            className="ps2-card overflow-hidden hover:shadow-lg transition-shadow duration-200"
+          >
+            <motion.button
+              className="w-full p-3 sm:p-4 cursor-pointer"
               onClick={() => setExpandedCategory(
                 expandedCategory === category.id ? null : category.id
               )}
             >
-              <div className="flex items-center gap-3">
-                <FolderOpen className="w-6 h-6 text-blue-500" />
-                <span className="text-lg font-semibold text-blue-600 dark:text-blue-400">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <FolderOpen className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500 flex-shrink-0" />
+                <span className="text-sm sm:text-lg font-semibold text-blue-600 dark:text-blue-400 text-left">
                   {category.name}
                 </span>
                 <ChevronRight 
-                  className={`ml-auto transition-transform ${
+                  className={`ml-auto w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-200 ${
                     expandedCategory === category.id ? 'rotate-90' : ''
                   }`} 
                 />
               </div>
-            </motion.div>
+            </motion.button>
 
             {expandedCategory === category.id && (
               <motion.div
@@ -137,20 +140,22 @@ export function ProfessionalProfile() {
                 transition={{ duration: 0.2 }}
                 className="border-t border-blue-100 dark:border-blue-900"
               >
-                <div className="p-4 space-y-4">
+                <div className="p-2 sm:p-4 space-y-3 sm:space-y-4">
                   {category.items.map((item) => (
                     <motion.div
                       key={item.id}
                       initial={{ x: -20, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
-                      className="flex items-start gap-3 pl-6"
+                      className="flex items-start gap-2 sm:gap-3 pl-3 sm:pl-6"
                     >
-                      {item.icon}
+                      <div className="mt-1 flex-shrink-0">
+                        {item.icon}
+                      </div>
                       <div>
-                        <h3 className="font-medium text-blue-600 dark:text-blue-400">
+                        <h3 className="text-sm sm:text-base font-medium text-blue-600 dark:text-blue-400">
                           {item.title}
                         </h3>
-                        <p className="text-sm text-blue-800 dark:text-blue-300">
+                        <p className="text-xs sm:text-sm text-blue-800 dark:text-blue-300 mt-0.5">
                           {item.content}
                         </p>
                       </div>

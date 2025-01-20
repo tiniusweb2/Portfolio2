@@ -7,6 +7,7 @@ import { MediaPlayer } from "@/components/custom/media-player";
 import { ThemeToggle } from "@/components/custom/theme-toggle";
 import { ProfessionalProfile } from "@/components/custom/professional-profile";
 import { HeroBanner } from "@/components/custom/hero-banner";
+import { GitHubCommits } from "@/components/custom/github-commits";
 
 const createParticle = () => ({
   id: Math.random(),
@@ -60,6 +61,10 @@ export default function Home() {
       <HeroBanner />
 
       <main className="container mx-auto px-4 pt-12">
+        <section className="mb-12">
+          <GitHubCommits />
+        </section>
+
         <section className="mb-12">
           <ProfessionalProfile />
         </section>

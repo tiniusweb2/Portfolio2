@@ -46,6 +46,13 @@ const ctaVariants = {
 export function HeroBanner() {
   const cubes = Array.from({ length: 4 }, (_, i) => i);
 
+  const scrollToProjects = () => {
+    const projectsSection = document.getElementById('projects');
+    if (projectsSection) {
+      projectsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="relative min-h-[70vh] flex flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-black to-blue-950">
       {/* PS2-style cube grid */}
@@ -91,6 +98,7 @@ export function HeroBanner() {
         <Button 
           size="lg"
           className="bg-blue-600 hover:bg-blue-500 text-white group"
+          onClick={scrollToProjects}
         >
           View Projects
           <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />

@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import fetch from "node-fetch";
 import { db } from "@db";
-import { blogPosts, contactSubmissions, meetings, socialProfiles } from "@db/schema";
+import { blogPosts } from "@db/schema";
 import { eq } from "drizzle-orm";
 
 interface GitHubStats {
@@ -54,11 +54,11 @@ const rateLimitStore = new Map<string, { count: number; timestamp: number }>();
 // Cleanup old rate limit entries every 5 minutes
 setInterval(() => {
   const now = Date.now();
-  rateLimitStore.forEach((data, ip) => {
+  for (const [ip, data] of rateLimitStore.entries()) {
     if (now - data.timestamp > RATE_LIMIT_WINDOW) {
       rateLimitStore.delete(ip);
     }
-  });
+  }
 }, 5 * 60 * 1000);
 
 function isRateLimited(ip: string): boolean {
@@ -99,40 +99,24 @@ export function registerRoutes(app: Express): Server {
     try {
       const formData: ContactFormData = req.body;
 
-      // Store contact submission in database
-      const [submission] = await db.insert(contactSubmissions).values({
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        preferredContact: formData.preferredContact,
-        message: formData.message,
-        status: 'pending'
-      }).returning();
-
-      // If meeting is requested, store meeting details
-      let meetingDetails;
-      if (formData.preferredContact === 'meet' && formData.meetingDate && formData.meetingTime) {
-        const [meeting] = await db.insert(meetings).values({
-          contactSubmissionId: submission.id,
-          scheduledFor: new Date(`${formData.meetingDate}T${formData.meetingTime}`),
-          meetingType: 'initial_consultation',
-          status: 'scheduled'
-        }).returning();
-
-        meetingDetails = {
-          dateTime: meeting.scheduledFor.toISOString(),
-          message: "Your meeting request has been received. You'll receive a confirmation email with meeting details shortly."
-        };
-      }
+      // Generate a unique ID for the submission
+      const submissionId = Date.now().toString();
+      submissions.set(submissionId, formData);
 
       // Prepare response
       const responseData: ContactResponse = {
         message: 'Message sent successfully',
-        submissionId: submission.id.toString(),
-        meetingDetails
+        submissionId,
       };
 
-      console.log('Successfully stored submission:', submission.id);
+      if (formData.preferredContact === 'meet' && formData.meetingDate && formData.meetingTime) {
+        responseData.meetingDetails = {
+          dateTime: `${formData.meetingDate} ${formData.meetingTime}`,
+          message: "Your meeting request has been received. You'll receive a confirmation email with meeting details shortly."
+        };
+      }
+
+      console.log('Successfully stored submission:', submissionId);
       res.json(responseData);
     } catch (error) {
       console.error('Contact form submission error:', error);
@@ -140,32 +124,6 @@ export function registerRoutes(app: Express): Server {
         message: 'Failed to send message',
         error: error instanceof Error ? error.message : 'Unknown error'
       });
-    }
-  });
-
-  // Social profiles endpoint
-  app.get('/api/social-profiles', async (req, res) => {
-    try {
-      const profiles = await db.query.socialProfiles.findMany({
-        where: eq(socialProfiles.active, true),
-      });
-      res.json(profiles);
-    } catch (error) {
-      console.error('Failed to fetch social profiles:', error);
-      res.status(500).json({ message: 'Failed to fetch social profiles' });
-    }
-  });
-
-  // Meetings endpoint
-  app.get('/api/meetings', async (req, res) => {
-    try {
-      const allMeetings = await db.query.meetings.findMany({
-        orderBy: (meetings, { desc }) => [desc(meetings.scheduledFor)],
-      });
-      res.json(allMeetings);
-    } catch (error) {
-      console.error('Failed to fetch meetings:', error);
-      res.status(500).json({ message: 'Failed to fetch meetings' });
     }
   });
 

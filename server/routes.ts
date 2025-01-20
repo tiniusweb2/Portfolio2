@@ -2,6 +2,12 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import fetch from "node-fetch";
 
+interface GitHubStats {
+  repos: number;
+  followers: number;
+  stars: number;
+}
+
 interface GitHubCommit {
   sha: string;
   commit: {
@@ -80,7 +86,7 @@ export function registerRoutes(app: Express): Server {
     // Check rate limit
     if (isRateLimited(clientIp)) {
       console.log('Rate limit exceeded for IP:', clientIp);
-      return res.status(429).json({ 
+      return res.status(429).json({
         message: 'Too many requests',
         error: 'Please wait a moment before submitting again',
         retryAfter: Math.ceil(RATE_LIMIT_WINDOW / 1000)
@@ -111,7 +117,7 @@ export function registerRoutes(app: Express): Server {
       res.json(responseData);
     } catch (error) {
       console.error('Contact form submission error:', error);
-      res.status(500).json({ 
+      res.status(500).json({
         message: 'Failed to send message',
         error: error instanceof Error ? error.message : 'Unknown error'
       });
@@ -170,12 +176,68 @@ export function registerRoutes(app: Express): Server {
       });
 
       const allCommits = await Promise.all(commitsPromises);
-      res.json(allCommits.flat().sort((a, b) => 
+      res.json(allCommits.flat().sort((a, b) =>
         new Date(b.date).getTime() - new Date(a.date).getTime()
       ));
     } catch (error) {
       console.error('GitHub API Error:', error);
       res.status(500).json({ message: 'Failed to fetch GitHub data' });
+    }
+  });
+
+  // Add new GitHub stats endpoint
+  app.get('/api/github/stats', async (req, res) => {
+    const token = process.env.GITHUB_TOKEN;
+    if (!token) {
+      return res.status(500).json({ message: 'GitHub token not configured' });
+    }
+
+    try {
+      // Fetch user data for followers count
+      const userResponse = await fetch(
+        'https://api.github.com/user',
+        {
+          headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        }
+      );
+
+      if (!userResponse.ok) {
+        throw new Error('Failed to fetch GitHub user data');
+      }
+
+      const userData = await userResponse.json() as any;
+
+      // Fetch repositories for repo count and stars
+      const reposResponse = await fetch(
+        'https://api.github.com/user/repos',
+        {
+          headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        }
+      );
+
+      if (!reposResponse.ok) {
+        throw new Error('Failed to fetch GitHub repositories');
+      }
+
+      const repos = await reposResponse.json() as any[];
+      const totalStars = repos.reduce((sum, repo) => sum + repo.stargazers_count, 0);
+
+      const stats: GitHubStats = {
+        repos: repos.length,
+        followers: userData.followers,
+        stars: totalStars
+      };
+
+      res.json(stats);
+    } catch (error) {
+      console.error('GitHub API Error:', error);
+      res.status(500).json({ message: 'Failed to fetch GitHub stats' });
     }
   });
 

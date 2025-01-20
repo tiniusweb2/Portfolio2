@@ -10,6 +10,7 @@ import { HeroBanner } from "@/components/custom/hero-banner";
 import { GitHubCommits } from "@/components/custom/github-commits";
 import { ConsultantAssessment } from "@/components/custom/consultant-assessment";
 import { SkillsTimeline } from "@/components/custom/skills-timeline";
+import { SocialWidget } from "@/components/custom/social-widget";
 
 const createParticle = () => ({
   id: Math.random(),
@@ -64,6 +65,10 @@ export default function Home() {
 
       <main className="container mx-auto px-4 pt-12">
         <section className="mb-12">
+          <SocialWidget />
+        </section>
+
+        <section className="mb-12">
           <GitHubCommits />
         </section>
 
@@ -101,8 +106,11 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="text-center p-8 text-blue-700 dark:text-blue-300">
-        <p>© 2024 Developer Portfolio. PlayStation 2 Inspired.</p>
+      <footer className="text-center p-8 text-white bg-gradient-to-br from-blue-600 to-blue-700">
+        <div className="container mx-auto">
+          <p className="text-lg mb-2">Tinius Troldmyr</p>
+          <p className="text-sm opacity-80">Underhaugsveien 1A, 0354 Oslo</p>
+        </div>
       </footer>
     </div>
   );

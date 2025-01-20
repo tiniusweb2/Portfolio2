@@ -6,6 +6,7 @@ import { MediaLibrary } from "@/components/custom/media-library";
 import { MediaPlayer } from "@/components/custom/media-player";
 import { ThemeToggle } from "@/components/custom/theme-toggle";
 import { ProfessionalProfile } from "@/components/custom/professional-profile";
+import { HeroBanner } from "@/components/custom/hero-banner";
 
 const createParticle = () => ({
   id: Math.random(),
@@ -48,25 +49,17 @@ export default function Home() {
         />
       ))}
 
-      <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="p-8"
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="absolute top-4 right-4 z-50"
       >
-        <div className="flex justify-between items-center max-w-6xl mx-auto">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-blue-600 dark:text-blue-400 ps2-text-glow">
-              Developer Portfolio
-            </h1>
-            <p className="mt-4 text-blue-800 dark:text-blue-300">
-              Welcome to my PlayStation 2 inspired portfolio
-            </p>
-          </div>
-          <ThemeToggle />
-        </div>
-      </motion.header>
+        <ThemeToggle />
+      </motion.div>
 
-      <main className="container mx-auto px-4">
+      <HeroBanner />
+
+      <main className="container mx-auto px-4 pt-12">
         <section className="mb-12">
           <ProfessionalProfile />
         </section>

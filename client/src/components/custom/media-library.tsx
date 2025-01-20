@@ -41,29 +41,21 @@ function CarouselContent() {
     slidesToScroll: 1
   });
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     if (emblaApi) {
-      setMounted(true);
-      emblaApi.on('select', () => {
+      const onSelect = () => {
         setSelectedIndex(emblaApi.selectedScrollSnap());
-      });
-    }
-    return () => {
-      if (emblaApi) {
-        emblaApi.off('select');
-      }
-    };
-  }, [emblaApi]);
+      };
 
-  if (!mounted) {
-    return (
-      <div className="flex justify-center items-center h-48">
-        <p className="text-blue-400">Loading gallery...</p>
-      </div>
-    );
-  }
+      emblaApi.on('select', onSelect);
+      onSelect(); // Initial selection
+
+      return () => {
+        emblaApi.off('select', onSelect);
+      };
+    }
+  }, [emblaApi]);
 
   return (
     <div className="relative">
@@ -96,13 +88,13 @@ function CarouselContent() {
         </div>
       </div>
 
-      {mounted && (
+      {emblaApi && (
         <>
           <Button
             variant="ghost"
             size="icon"
             className="absolute left-0 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70"
-            onClick={() => emblaApi?.scrollPrev()}
+            onClick={() => emblaApi.scrollPrev()}
           >
             <ChevronLeft className="h-6 w-6" />
           </Button>
@@ -111,7 +103,7 @@ function CarouselContent() {
             variant="ghost"
             size="icon"
             className="absolute right-0 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70"
-            onClick={() => emblaApi?.scrollNext()}
+            onClick={() => emblaApi.scrollNext()}
           >
             <ChevronRight className="h-6 w-6" />
           </Button>
@@ -125,7 +117,7 @@ function CarouselContent() {
                     ? 'bg-blue-500' 
                     : 'bg-blue-200 hover:bg-blue-300'
                 }`}
-                onClick={() => emblaApi?.scrollTo(index)}
+                onClick={() => emblaApi.scrollTo(index)}
               />
             ))}
           </div>

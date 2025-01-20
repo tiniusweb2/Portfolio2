@@ -1,0 +1,72 @@
+
+      /////////////////////
+   ///////////////////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////        Curious and driven?
+  ///////////////@@@@@@@///////        Work with us!
+  ///////////////@@@@@@@///////
+  ///////////////@@@@@@@///////        https://join.replit.com/hack.with.us
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@#//////////////
+   ///////////////////////////
+      /////////////////////
+      _app-cfd0bcc61d6a1c17.js:16:5277
+NetworkError when attempting to fetch resource. _app-cfd0bcc61d6a1c17.js:16:5277
+[analytics.js] Failed to load Analytics.js TypeError: NetworkError when attempting to fetch resource. _app-cfd0bcc61d6a1c17.js:16:5277
+Error sending segment performance metrics TypeError: NetworkError when attempting to fetch resource. _app-cfd0bcc61d6a1c17.js:16:5277
+[LaunchDarkly] LaunchDarkly client initialized _app-cfd0bcc61d6a1c17.js:16:5277
+Request to access cookie or storage on “<URL>” was blocked because it came from a tracker and content blocking is enabled. 7
+Content-Security-Policy warnings 4
+Partitioned cookie or storage access was provided to “https://www.google.com/recaptcha/enterprise/anchor?ar=1&k=6LdqhwwoAAAAAFPdw8jCuvY3PaHQItGj3RzOS4fW&co=aHR0cHM6Ly9yZXBsaXQuY29tOjQ0Mw..&hl=en&v=1Bq_oiMBd4XPUhKDwr0YL1Js&size=invisible&cb=c6igdmjvd1it” because it is loaded in the third-party context and dynamic state partitioning is enabled.
+
+Ignoring unsupported entryTypes: longtask. recaptcha__en.js:226:196
+Request to access cookie or storage on “https://www.google.com/js/bg/SjI4xaazOLGYHsCmpj5vwTkIv3fbctOR9tjWYGw9sEg.js” was blocked because it came from a tracker and content blocking is enabled.
+
+Cookie “_GRECAPTCHA” has been rejected because it is foreign and does not have the “Partitioned“ attribute. 4 reload
+Request to access cookie or storage on “<URL>” was blocked because it came from a tracker and content blocking is enabled. 2
+Partitioned cookie or storage access was provided to “https://m.stripe.network/inner.html#url=https%3A%2F%2Freplit.com%2F%40tiniuslonot%2FUIBugInspector&title=UIBugInspector%20-%20Replit&referrer=&muid=34a3204f-94ef-4248-aa92-f1a03d20ddc10ed0cc&sid=9b0f3af7-19db-449b-b551-a582a75e3c95f2d4c0&version=6&preview=false” because it is loaded in the third-party context and dynamic state partitioning is enabled.
+
+Blocked third party https://m.stripe.network/inner.html#url=https%3A%2F%2Freplit.com%2F%40tiniuslonot%2FUIBugInspector&title=UIBugInspector%20-%20Replit&referrer=&muid=34a3204f-94ef-4248-aa92-f1a03d20ddc10ed0cc&sid=9b0f3af7-19db-449b-b551-a582a75e3c95f2d4c0&version=6&preview=false from extracting canvas data. out-4.5.44.js:1:26884
+Request to access cookie or storage on “<URL>” was blocked because it came from a tracker and content blocking is enabled. 5
+Blocked third party https://m.stripe.network/inner.html#url=https%3A%2F%2Freplit.com%2F%40tiniuslonot%2FUIBugInspector&title=UIBugInspector%20-%20Replit&referrer=&muid=34a3204f-94ef-4248-aa92-f1a03d20ddc10ed0cc&sid=9b0f3af7-19db-449b-b551-a582a75e3c95f2d4c0&version=6&preview=false from extracting canvas data. out-4.5.44.js:1:26884
+Cookie “_GRECAPTCHA” has been rejected because it is foreign and does not have the “Partitioned“ attribute. 2 reload
+Blocked third party https://m.stripe.network/inner.html#url=https%3A%2F%2Freplit.com%2F%40tiniuslonot%2FUIBugInspector&title=UIBugInspector%20-%20Replit&referrer=&muid=34a3204f-94ef-4248-aa92-f1a03d20ddc10ed0cc&sid=9b0f3af7-19db-449b-b551-a582a75e3c95f2d4c0&version=6&preview=false from extracting canvas data. out-4.5.44.js:1:26884
+Cookie “_GRECAPTCHA” has been rejected because it is foreign and does not have the “Partitioned“ attribute. 2 reload
+Blocked third party https://m.stripe.network/inner.html#url=https%3A%2F%2Freplit.com%2F%40tiniuslonot%2FUIBugInspector&title=UIBugInspector%20-%20Replit&referrer=&muid=34a3204f-94ef-4248-aa92-f1a03d20ddc10ed0cc&sid=9b0f3af7-19db-449b-b551-a582a75e3c95f2d4c0&version=6&preview=false from extracting canvas data. out-4.5.44.js:1:26884
+Cookie warnings 10
+Feature Policy: Skipping unsupported feature name “accelerometer”. framework-ba92578dc354a94d.js:1:72783
+Feature Policy: Skipping unsupported feature name “ambient-light-sensor”. framework-ba92578dc354a94d.js:1:72783
+Feature Policy: Skipping unsupported feature name “autoplay”. framework-ba92578dc354a94d.js:1:72783
+Feature Policy: Skipping unsupported feature name “battery”. framework-ba92578dc354a94d.js:1:72783
+Feature Policy: Skipping unsupported feature name “encrypted-media”. framework-ba92578dc354a94d.js:1:72783
+Feature Policy: Skipping unsupported feature name “execution-while-not-rendered”. framework-ba92578dc354a94d.js:1:72783
+Feature Policy: Skipping unsupported feature name “execution-while-out-of-viewport”. framework-ba92578dc354a94d.js:1:72783
+Feature Policy: Skipping unsupported feature name “gyroscope”. framework-ba92578dc354a94d.js:1:72783
+Feature Policy: Skipping unsupported feature name “layout-animations”. framework-ba92578dc354a94d.js:1:72783
+Feature Policy: Skipping unsupported feature name “legacy-image-formats”. framework-ba92578dc354a94d.js:1:72783
+Feature Policy: Skipping unsupported feature name “magnetometer”. framework-ba92578dc354a94d.js:1:72783
+Feature Policy: Skipping unsupported feature name “midi”. framework-ba92578dc354a94d.js:1:72783
+Feature Policy: Skipping unsupported feature name “navigation-override”. framework-ba92578dc354a94d.js:1:72783
+Feature Policy: Skipping unsupported feature name “oversized-images”. framework-ba92578dc354a94d.js:1:72783
+Feature Policy: Skipping unsupported feature name “payment”. framework-ba92578dc354a94d.js:1:72783
+Feature Policy: Skipping unsupported feature name “picture-in-picture”. framework-ba92578dc354a94d.js:1:72783
+Feature Policy: Skipping unsupported feature name “publickey-credentials”. framework-ba92578dc354a94d.js:1:72783
+Feature Policy: Skipping unsupported feature name “sync-xhr”. framework-ba92578dc354a94d.js:1:72783
+Feature Policy: Skipping unsupported feature name “unoptimized-images”. framework-ba92578dc354a94d.js:1:72783
+Feature Policy: Skipping unsupported feature name “unsized-media”. framework-ba92578dc354a94d.js:1:72783
+Feature Policy: Skipping unsupported feature name “usb”. framework-ba92578dc354a94d.js:1:72783
+Feature Policy: Skipping unsupported feature name “xr-spatial-tracking”. framework-ba92578dc354a94d.js:1:72783
+Feature Policy: Skipping unsupported feature name “clipboard-read”. framework-ba92578dc354a94d.js:1:72783
+Feature Policy: Skipping unsupported feature name “clipboard-write”. framework-ba92578dc354a94d.js:1:72783
+Feature Policy: Skipping unsupported feature name “accelerometer”. framework-ba92578dc354a94d.js:1:159201
+Feature Policy: Skipping unsupported feature name “ambient-light-sensor”. framework-ba92578dc354a94d.js:1:159201
+Feature Policy: Skipping unsupported feature name “autoplay”. framework-ba92578dc354a94d.js:1:159201
+Feature Policy: Skipping unsupported feature name “battery”. framework-ba92578dc354a94d.js:1:159201
+Feature Policy: Skipping unsupported feature name “encrypted-media”. framework-ba92578dc354a94d.js:1:159201
+Feature Policy: Skipping unsupported feature name “execution-while-not-rendered”. framework-ba92578dc354a94d.js:1:159201
+Source map error: No sources are declared in this source map.
+Resource URL: https://d3c8147e-7649-4745-8adc-32191fb3766c-00-yn3f4hg19a1z.spock.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-4MBMRILA.js?v=670fb158
+Source Map URL: chunk-4MBMRILA.js.map
+2

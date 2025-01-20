@@ -8,6 +8,7 @@ import { ThemeToggle } from "@/components/custom/theme-toggle";
 import { ProfessionalProfile } from "@/components/custom/professional-profile";
 import { HeroBanner } from "@/components/custom/hero-banner";
 import { GitHubCommits } from "@/components/custom/github-commits";
+import { ConsultantAssessment } from "@/components/custom/consultant-assessment";
 
 const createParticle = () => ({
   id: Math.random(),
@@ -67,6 +68,13 @@ export default function Home() {
 
         <section className="mb-12">
           <ProfessionalProfile />
+        </section>
+
+        <section className="mb-12">
+          <h2 className="text-2xl font-bold text-blue-700 dark:text-blue-300 mb-6 ps2-text-glow">
+            Work With Me
+          </h2>
+          <ConsultantAssessment />
         </section>
 
         <section className="mb-12">

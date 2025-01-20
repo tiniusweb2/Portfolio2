@@ -51,11 +51,12 @@ const rateLimitStore = new Map<string, { count: number; timestamp: number }>();
 
 setInterval(() => {
   const now = Date.now();
-  for (const [ip, data] of rateLimitStore.entries()) {
+  // Convert Map.entries() to Array before iterating
+  Array.from(rateLimitStore.entries()).forEach(([ip, data]) => {
     if (now - data.timestamp > RATE_LIMIT_WINDOW) {
       rateLimitStore.delete(ip);
     }
-  }
+  });
 }, 5 * 60 * 1000);
 
 function isRateLimited(ip: string): boolean {

@@ -12,16 +12,7 @@ const cubeVariants = {
       duration: 0.8,
       ease: [0.43, 0.13, 0.23, 0.96]
     }
-  }),
-  hover: {
-    scale: 1.1,
-    rotate: 90,
-    boxShadow: "0 0 25px rgba(59, 130, 246, 0.7)",
-    transition: {
-      duration: 0.3,
-      ease: "easeInOut"
-    }
-  }
+  })
 };
 
 const textVariants = {
@@ -48,22 +39,7 @@ const ctaVariants = {
   },
   hover: { 
     scale: 1.05,
-    transition: { 
-      duration: 0.2,
-      ease: "easeInOut"
-    }
-  }
-};
-
-const particleVariants = {
-  animate: {
-    y: [0, -10, 0],
-    opacity: [0.3, 0.7, 0.3],
-    transition: {
-      duration: 2,
-      repeat: Infinity,
-      ease: "easeInOut"
-    }
+    transition: { duration: 0.2 }
   }
 };
 
@@ -73,10 +49,7 @@ export function HeroBanner() {
   const scrollToProjects = () => {
     const projectsSection = document.getElementById('projects');
     if (projectsSection) {
-      projectsSection.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      });
+      projectsSection.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -91,11 +64,10 @@ export function HeroBanner() {
             variants={cubeVariants}
             initial="initial"
             animate="animate"
-            whileHover="hover"
-            className="w-16 h-16 md:w-24 md:h-24 bg-blue-500 rounded-sm transform rotate-45 cursor-pointer"
+            className="w-16 h-16 md:w-24 md:h-24 bg-blue-500 rounded-sm transform rotate-45"
             style={{
               background: 'linear-gradient(135deg, #60a5fa, #3b82f6)',
-              boxShadow: '0 0 15px rgba(59, 130, 246, 0.3)'
+              boxShadow: '0 0 20px rgba(59, 130, 246, 0.5)'
             }}
           />
         ))}
@@ -108,18 +80,12 @@ export function HeroBanner() {
         animate="animate"
         className="text-center z-10 mb-8"
       >
-        <motion.h1 
-          className="text-4xl md:text-6xl font-bold text-white mb-4 ps2-text-glow"
-          whileHover={{ scale: 1.02 }}
-        >
+        <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 ps2-text-glow">
           Full-Stack Developer
-        </motion.h1>
-        <motion.p 
-          className="text-xl md:text-2xl text-blue-200"
-          whileHover={{ scale: 1.02 }}
-        >
+        </h1>
+        <p className="text-xl md:text-2xl text-blue-200">
           Building immersive digital experiences
-        </motion.p>
+        </p>
       </motion.div>
 
       {/* CTA Button */}
@@ -128,19 +94,13 @@ export function HeroBanner() {
         initial="initial"
         animate="animate"
         whileHover="hover"
-        whileTap={{ scale: 0.95 }}
       >
         <Button 
           size="lg"
-          className="bg-blue-600 hover:bg-blue-500 text-white group relative overflow-hidden"
+          className="bg-blue-600 hover:bg-blue-500 text-white group"
           onClick={scrollToProjects}
         >
-          <motion.span 
-            className="absolute inset-0 bg-blue-400 opacity-0"
-            whileHover={{ opacity: 0.2, scale: 1.5 }}
-            transition={{ duration: 0.3 }}
-          />
-          <span className="relative">View Projects</span>
+          View Projects
           <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
         </Button>
       </motion.div>
@@ -148,17 +108,16 @@ export function HeroBanner() {
       {/* Background particles */}
       <div className="absolute inset-0 pointer-events-none">
         {Array.from({ length: 20 }).map((_, i) => (
-          <motion.div
+          <div
             key={i}
-            variants={particleVariants}
-            animate="animate"
-            custom={i}
-            className="absolute w-2 h-2 bg-blue-400 rounded-full opacity-30"
+            className="particle"
             style={{
+              '--direction-x': Math.random() * 2 - 1,
+              '--direction-y': Math.random() * 2 - 1,
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 5}s`
-            }}
+            } as React.CSSProperties}
           />
         ))}
       </div>

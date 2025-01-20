@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MotionCard, MotionImage } from "@/lib/animations";
 import { fadeIn } from "@/lib/animations";
 import useEmblaCarousel from 'embla-carousel-react';
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ErrorBoundary } from "./error-boundary";
 
 const mediaItems = [
   {
@@ -32,94 +33,104 @@ const mediaItems = [
   }
 ];
 
-export function MediaLibrary() {
+function CarouselContent() {
   const [selectedItem, setSelectedItem] = useState<number | null>(null);
-  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+  const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     align: 'start',
-    slidesToScroll: 1,
-    breakpoints: {
-      '(min-width: 768px)': { slidesToScroll: 3 }
-    }
+    slidesToScroll: 1
   });
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [mounted, setMounted] = useState(false);
 
-  const scrollPrev = () => emblaApi && emblaApi.scrollPrev();
-  const scrollNext = () => emblaApi && emblaApi.scrollNext();
+  useEffect(() => {
+    if (emblaApi) {
+      setMounted(true);
+      emblaApi.on('select', () => {
+        setSelectedIndex(emblaApi.selectedScrollSnap());
+      });
+    }
+    return () => {
+      if (emblaApi) {
+        emblaApi.off('select');
+      }
+    };
+  }, [emblaApi]);
 
-  const onSelect = () => {
-    if (!emblaApi) return;
-    setSelectedIndex(emblaApi.selectedScrollSnap());
-  };
+  if (!mounted) {
+    return (
+      <div className="flex justify-center items-center h-48">
+        <p className="text-blue-400">Loading gallery...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-bold text-blue-300 mb-6 ps2-text-glow">
-        Media Gallery
-      </h2>
-
-      <div className="relative">
-        <div className="overflow-hidden" ref={emblaRef}>
-          <div className="flex">
-            {mediaItems.map((item) => (
-              <div 
-                key={item.id} 
-                className="flex-[0_0_100%] min-w-0 md:flex-[0_0_33.33%] px-2"
+    <div className="relative">
+      <div className="overflow-hidden" ref={emblaRef}>
+        <div className="flex">
+          {mediaItems.map((item) => (
+            <div 
+              key={item.id} 
+              className="flex-[0_0_100%] min-w-0 md:flex-[0_0_33.33%] px-2"
+            >
+              <MotionCard
+                variants={fadeIn}
+                initial="initial"
+                animate="animate"
+                whileHover={{ scale: 1.05 }}
+                className="ps2-card overflow-hidden cursor-pointer"
+                onClick={() => setSelectedItem(item.id)}
               >
-                <MotionCard
-                  variants={fadeIn}
-                  initial="initial"
-                  animate="animate"
-                  whileHover={{ scale: 1.05 }}
-                  className="ps2-card overflow-hidden cursor-pointer"
-                  onClick={() => setSelectedItem(item.id)}
-                >
-                  <MotionImage
-                    src={item.url}
-                    alt={item.title}
-                    className="w-full h-48 object-cover"
-                  />
-                  <div className="p-3">
-                    <h3 className="text-blue-200">{item.title}</h3>
-                  </div>
-                </MotionCard>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute left-0 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70"
-          onClick={scrollPrev}
-        >
-          <ChevronLeft className="h-6 w-6" />
-        </Button>
-
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute right-0 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70"
-          onClick={scrollNext}
-        >
-          <ChevronRight className="h-6 w-6" />
-        </Button>
-
-        <div className="flex justify-center gap-2 mt-4">
-          {mediaItems.map((_, index) => (
-            <button
-              key={index}
-              className={`w-2 h-2 rounded-full transition-colors ${
-                index === selectedIndex 
-                  ? 'bg-blue-500' 
-                  : 'bg-blue-200 hover:bg-blue-300'
-              }`}
-              onClick={() => emblaApi?.scrollTo(index)}
-            />
+                <MotionImage
+                  src={item.url}
+                  alt={item.title}
+                  className="w-full h-48 object-cover"
+                />
+                <div className="p-3">
+                  <h3 className="text-blue-200">{item.title}</h3>
+                </div>
+              </MotionCard>
+            </div>
           ))}
         </div>
       </div>
+
+      {mounted && (
+        <>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute left-0 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70"
+            onClick={() => emblaApi?.scrollPrev()}
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute right-0 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70"
+            onClick={() => emblaApi?.scrollNext()}
+          >
+            <ChevronRight className="h-6 w-6" />
+          </Button>
+
+          <div className="flex justify-center gap-2 mt-4">
+            {mediaItems.map((_, index) => (
+              <button
+                key={index}
+                className={`w-2 h-2 rounded-full transition-colors ${
+                  index === selectedIndex 
+                    ? 'bg-blue-500' 
+                    : 'bg-blue-200 hover:bg-blue-300'
+                }`}
+                onClick={() => emblaApi?.scrollTo(index)}
+              />
+            ))}
+          </div>
+        </>
+      )}
 
       {selectedItem && (
         <div
@@ -137,6 +148,26 @@ export function MediaLibrary() {
           />
         </div>
       )}
+    </div>
+  );
+}
+
+export function MediaLibrary() {
+  return (
+    <div className="p-4">
+      <h2 className="text-2xl font-bold text-blue-300 mb-6 ps2-text-glow">
+        Media Gallery
+      </h2>
+
+      <ErrorBoundary
+        fallback={
+          <div className="text-center p-4">
+            <p className="text-blue-400">Unable to load media gallery.</p>
+          </div>
+        }
+      >
+        <CarouselContent />
+      </ErrorBoundary>
     </div>
   );
 }

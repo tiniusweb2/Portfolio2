@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { PS2Loading } from "@/components/custom/ps2-loading";
 import { SkillsGrid } from "@/components/custom/skills-grid";
-import { MediaLibrary } from "@/components/custom/media-library";
+import { BlogGallery } from "@/components/custom/blog-gallery";
 import { MediaPlayer } from "@/components/custom/media-player";
 import { ThemeToggle } from "@/components/custom/theme-toggle";
 import { ProfessionalProfile } from "@/components/custom/professional-profile";
@@ -100,14 +100,7 @@ export default function Home() {
         </section>
 
         <section className="mb-12">
-          <MediaLibrary />
-        </section>
-
-        <section className="mb-12">
-          <h2 className="text-2xl font-bold text-blue-700 dark:text-blue-300 mb-6">
-            Media Player
-          </h2>
-          <MediaPlayer />
+          <BlogGallery />
         </section>
       </main>
 

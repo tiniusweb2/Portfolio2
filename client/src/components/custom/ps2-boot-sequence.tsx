@@ -80,14 +80,22 @@ export function PS2BootSequence({ onComplete }: { onComplete: () => void }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 flex items-center justify-center text-white"
+            className="absolute inset-0 flex flex-col items-center justify-center text-white space-y-4"
           >
             <motion.div
               initial={{ y: 50 }}
               animate={{ y: 0 }}
               className="text-4xl font-bold tracking-wider"
             >
-              PS2 Portfolio
+              Tinius Troldmyr
+            </motion.div>
+            <motion.div
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="text-xl text-gray-400"
+            >
+              Portfolio
             </motion.div>
           </motion.div>
         )}

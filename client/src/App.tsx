@@ -7,6 +7,7 @@ import Home from "@/pages/home";
 import "./styles/ps2-theme.css";
 import { useState } from "react";
 import { PS2BootSequence } from "@/components/custom/ps2-boot-sequence";
+import { Footer } from "@/components/custom/footer";
 
 function Router() {
   return (
@@ -25,10 +26,13 @@ function App() {
       {showBootSequence ? (
         <PS2BootSequence onComplete={() => setShowBootSequence(false)} />
       ) : (
-        <>
-          <Router />
+        <div className="min-h-screen flex flex-col">
+          <main className="flex-grow">
+            <Router />
+          </main>
+          <Footer />
           <Toaster />
-        </>
+        </div>
       )}
     </QueryClientProvider>
   );

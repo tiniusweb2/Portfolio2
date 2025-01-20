@@ -10,30 +10,31 @@
 }
 
 .ps2-container {
-  background-color: #000913;
+  background-color: #000408;
   min-height: 100vh;
   color: #e0e7ff;
 }
 
 .ps2-text-glow {
-  text-shadow: 0 0 8px rgba(147, 197, 253, 0.5);
+  text-shadow: 0 0 4px rgba(147, 197, 253, 0.3);
 }
 
 .ps2-card {
-  background: rgba(30, 41, 59, 0.8);
-  border: 1px solid rgba(147, 197, 253, 0.2);
-  backdrop-filter: blur(8px);
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(147, 197, 253, 0.15);
+  backdrop-filter: blur(12px);
 }
 
 .ps2-scan-line {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(147, 197, 253, 0.2),
+    rgba(147, 197, 253, 0.1),
     transparent
   );
   background-size: 200% 100%;
-  animation: ps2-scan 2s linear infinite;
+  animation: ps2-scan 3s linear infinite;
+  opacity: 0.7;
 }
 
 .ps2-cursor {

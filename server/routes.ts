@@ -1,6 +1,9 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import fetch from "node-fetch";
+import { db } from "@db";
+import { blogPosts } from "@db/schema";
+import { eq } from "drizzle-orm";
 
 interface GitHubStats {
   repos: number;
@@ -238,6 +241,36 @@ export function registerRoutes(app: Express): Server {
     } catch (error) {
       console.error('GitHub API Error:', error);
       res.status(500).json({ message: 'Failed to fetch GitHub stats' });
+    }
+  });
+
+  // Blog posts endpoints
+  app.get('/api/blog/posts', async (req, res) => {
+    try {
+      const posts = await db.query.blogPosts.findMany({
+        orderBy: (posts, { desc }) => [desc(posts.publishedAt)],
+      });
+      res.json(posts);
+    } catch (error) {
+      console.error('Failed to fetch blog posts:', error);
+      res.status(500).json({ message: 'Failed to fetch blog posts' });
+    }
+  });
+
+  app.get('/api/blog/posts/:slug', async (req, res) => {
+    try {
+      const post = await db.query.blogPosts.findFirst({
+        where: eq(blogPosts.slug, req.params.slug),
+      });
+
+      if (!post) {
+        return res.status(404).json({ message: 'Blog post not found' });
+      }
+
+      res.json(post);
+    } catch (error) {
+      console.error('Failed to fetch blog post:', error);
+      res.status(500).json({ message: 'Failed to fetch blog post' });
     }
   });
 

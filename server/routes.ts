@@ -26,23 +26,48 @@ interface ContactFormData {
   recommendation: string;
 }
 
+interface ContactResponse {
+  message: string;
+  submissionId: string;
+  meetingDetails?: {
+    dateTime: string;
+    message: string;
+  };
+}
+
 // Store submissions in memory (in a production app, this would be in a database)
 const submissions = new Map<string, ContactFormData>();
 
 // Rate limiting configuration
 const RATE_LIMIT_WINDOW = 30 * 1000; // 30 seconds
-const rateLimitStore = new Map<string, number>();
+const rateLimitStore = new Map<string, { count: number; timestamp: number }>();
+
+// Cleanup old rate limit entries every 5 minutes
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, data] of rateLimitStore.entries()) {
+    if (now - data.timestamp > RATE_LIMIT_WINDOW) {
+      rateLimitStore.delete(ip);
+    }
+  }
+}, 5 * 60 * 1000);
 
 function isRateLimited(ip: string): boolean {
   const now = Date.now();
-  const lastSubmission = rateLimitStore.get(ip);
+  const data = rateLimitStore.get(ip) || { count: 0, timestamp: now };
 
-  if (lastSubmission && now - lastSubmission < RATE_LIMIT_WINDOW) {
-    return true;
+  // Reset counter if window has passed
+  if (now - data.timestamp > RATE_LIMIT_WINDOW) {
+    data.count = 1;
+    data.timestamp = now;
+    rateLimitStore.set(ip, data);
+    return false;
   }
 
-  rateLimitStore.set(ip, now);
-  return false;
+  // Increment counter and check limit
+  data.count++;
+  rateLimitStore.set(ip, data);
+  return data.count > 3; // Allow 3 requests per window
 }
 
 export function registerRoutes(app: Express): Server {
@@ -58,7 +83,7 @@ export function registerRoutes(app: Express): Server {
       return res.status(429).json({ 
         message: 'Too many requests',
         error: 'Please wait a moment before submitting again',
-        retryAfter: RATE_LIMIT_WINDOW / 1000
+        retryAfter: Math.ceil(RATE_LIMIT_WINDOW / 1000)
       });
     }
 
@@ -69,13 +94,13 @@ export function registerRoutes(app: Express): Server {
       const submissionId = Date.now().toString();
       submissions.set(submissionId, formData);
 
-      // Prepare response based on contact preference
-      const responseData = {
+      // Prepare response
+      const responseData: ContactResponse = {
         message: 'Message sent successfully',
         submissionId,
       };
 
-      if (formData.preferredContact === 'meet') {
+      if (formData.preferredContact === 'meet' && formData.meetingDate && formData.meetingTime) {
         responseData.meetingDetails = {
           dateTime: `${formData.meetingDate} ${formData.meetingTime}`,
           message: "Your meeting request has been received. You'll receive a confirmation email with meeting details shortly."
@@ -133,7 +158,7 @@ export function registerRoutes(app: Express): Server {
           return [];
         }
 
-        const commits: GitHubCommit[] = await commitsResponse.json();
+        const commits = await commitsResponse.json() as GitHubCommit[];
         return commits.slice(0, 5).map(commit => ({
           repo: repo.name,
           message: commit.commit.message,

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, ArrowRight, Mail, Phone, Video, Loader2, XCircle, Calendar } from "lucide-react";
+import { CheckCircle, ArrowRight, Mail, Phone, Video, Loader2, XCircle, Calendar, Clock } from "lucide-react";
 import { ErrorBoundary } from "./error-boundary";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
@@ -128,8 +128,9 @@ const getRecommendation = (answers: Record<string, string>) => {
   };
 };
 
-// Add RATE_LIMIT_ERROR constant
+// Add RATE_LIMIT_ERROR and SUBMISSION_TIMEOUT constants at the top
 const RATE_LIMIT_ERROR = "Please wait a moment before submitting again";
+const SUBMISSION_TIMEOUT = 30000; // 30 seconds, matching server
 
 export function ConsultantAssessment() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -137,6 +138,8 @@ export function ConsultantAssessment() {
   const [showForm, setShowForm] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [retryAfter, setRetryAfter] = useState<number | null>(null);
+  const [retryTimeout, setRetryTimeout] = useState<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
 
   const form = useForm<EmailFormData>({
@@ -156,6 +159,16 @@ export function ConsultantAssessment() {
     if (formValues.email) localStorage.setItem('consultant_form_email', formValues.email);
     if (formValues.message) localStorage.setItem('consultant_form_message', formValues.message);
   }, [formValues]);
+
+  // Clear retry timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (retryTimeout) {
+        clearTimeout(retryTimeout);
+      }
+    };
+  }, [retryTimeout]);
+
 
   const handleAnswer = (value: string) => {
     setAnswers({
@@ -184,10 +197,22 @@ export function ConsultantAssessment() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        // Special handling for rate limit errors
+
+        // Handle rate limiting
         if (response.status === 429) {
+          const retryAfterSecs = errorData.retryAfter || 30;
+          setRetryAfter(retryAfterSecs);
+
+          // Set up retry timeout
+          const timeout = setTimeout(() => {
+            setRetryAfter(null);
+            setShowError(false);
+          }, retryAfterSecs * 1000);
+
+          setRetryTimeout(timeout);
           throw new Error(RATE_LIMIT_ERROR);
         }
+
         throw new Error(errorData.error || errorData.message || "Failed to send message");
       }
 
@@ -197,10 +222,17 @@ export function ConsultantAssessment() {
       setShowSuccess(true);
       setShowError(false);
 
+      // Clear any existing retry timeouts
+      if (retryTimeout) {
+        clearTimeout(retryTimeout);
+        setRetryTimeout(null);
+      }
+      setRetryAfter(null);
+
       successSound.play().catch(console.error);
 
-      const meetingDetails = formValues.preferredContact === 'meet'
-        ? "Your meeting request has been received. You'll receive a confirmation email with meeting details shortly."
+      const meetingDetails = data.meetingDetails
+        ? data.meetingDetails.message
         : formValues.preferredContact === 'phone'
           ? "I'll call you shortly at your provided number"
           : "I'll email you within 24-48 hours";
@@ -520,12 +552,17 @@ export function ConsultantAssessment() {
                     <Button
                       type="submit"
                       className="flex-1 bg-blue-600 hover:bg-blue-500 text-white"
-                      disabled={contactMutation.isPending}
+                      disabled={contactMutation.isPending || retryAfter !== null}
                     >
                       {contactMutation.isPending ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                           Sending...
+                        </>
+                      ) : retryAfter !== null ? (
+                        <>
+                          <Clock className="mr-2 h-4 w-4" />
+                          Retry in {retryAfter}s
                         </>
                       ) : (
                         <>
@@ -593,4 +630,3 @@ export function ConsultantAssessment() {
 }
 
 let lastSubmissionTime = 0;
-const SUBMISSION_TIMEOUT = 3000; // 3 seconds

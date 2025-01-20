@@ -128,6 +128,9 @@ const getRecommendation = (answers: Record<string, string>) => {
   };
 };
 
+// Add RATE_LIMIT_ERROR constant
+const RATE_LIMIT_ERROR = "Please wait a moment before submitting again";
+
 export function ConsultantAssessment() {
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -167,13 +170,6 @@ export function ConsultantAssessment() {
 
   const contactMutation = useMutation({
     mutationFn: async (data: EmailFormData) => {
-      // Rate limiting check
-      const now = Date.now();
-      if (now - lastSubmissionTime < SUBMISSION_TIMEOUT) {
-        throw new Error("Please wait a moment before submitting again");
-      }
-      lastSubmissionTime = now;
-
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: {
@@ -188,6 +184,10 @@ export function ConsultantAssessment() {
 
       if (!response.ok) {
         const errorData = await response.json();
+        // Special handling for rate limit errors
+        if (response.status === 429) {
+          throw new Error(RATE_LIMIT_ERROR);
+        }
         throw new Error(errorData.error || errorData.message || "Failed to send message");
       }
 

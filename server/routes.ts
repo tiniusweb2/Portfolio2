@@ -29,9 +29,38 @@ interface ContactFormData {
 // Store submissions in memory (in a production app, this would be in a database)
 const submissions = new Map<string, ContactFormData>();
 
+// Rate limiting configuration
+const RATE_LIMIT_WINDOW = 30 * 1000; // 30 seconds
+const rateLimitStore = new Map<string, number>();
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const lastSubmission = rateLimitStore.get(ip);
+
+  if (lastSubmission && now - lastSubmission < RATE_LIMIT_WINDOW) {
+    return true;
+  }
+
+  rateLimitStore.set(ip, now);
+  return false;
+}
+
 export function registerRoutes(app: Express): Server {
   app.post('/api/contact', async (req, res) => {
     console.log('Received contact form submission:', req.body);
+
+    // Get client IP
+    const clientIp = req.ip || req.socket.remoteAddress || 'unknown';
+
+    // Check rate limit
+    if (isRateLimited(clientIp)) {
+      console.log('Rate limit exceeded for IP:', clientIp);
+      return res.status(429).json({ 
+        message: 'Too many requests',
+        error: 'Please wait a moment before submitting again',
+        retryAfter: RATE_LIMIT_WINDOW / 1000
+      });
+    }
 
     try {
       const formData: ContactFormData = req.body;

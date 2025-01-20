@@ -7,30 +7,10 @@ import { MediaPlayer } from "@/components/custom/media-player";
 import { ThemeToggle } from "@/components/custom/theme-toggle";
 import { ProfessionalProfile } from "@/components/custom/professional-profile";
 import { HeroBanner } from "@/components/custom/hero-banner";
-
-interface Particle {
-  id: number;
-  x: number;
-  y: number;
-  directionX: number;
-  directionY: number;
-  size: "small" | "medium" | "large";
-}
-
-const createParticle = (): Particle => ({
-  id: Math.random(),
-  x: Math.random() * window.innerWidth,
-  y: Math.random() * window.innerHeight,
-  directionX: Math.random() * 2 - 1,
-  directionY: Math.random() * 2 - 1,
-  size: Math.random() < 0.6 ? "small" : Math.random() < 0.9 ? "medium" : "large"
-});
+import { BackgroundAnimation } from "@/components/custom/background-animation";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
-  const [particles] = useState(() =>
-    Array.from({ length: 50 }, () => createParticle())
-  );
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -67,18 +47,7 @@ export default function Home() {
 
   return (
     <div className="ps2-container ps2-cursor">
-      {particles.map((particle) => (
-        <div
-          key={particle.id}
-          className={`particle particle-${particle.size}`}
-          style={{
-            left: `${particle.x}px`,
-            top: `${particle.y}px`,
-            '--direction-x': particle.directionX,
-            '--direction-y': particle.directionY,
-          } as React.CSSProperties}
-        />
-      ))}
+      <BackgroundAnimation />
 
       <header className="relative z-10">
         <div className="absolute top-4 right-4">

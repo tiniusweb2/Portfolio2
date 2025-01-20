@@ -7,7 +7,6 @@ import Home from "@/pages/home";
 import KnowledgeBase from "@/pages/knowledge-base";
 import { useState } from "react";
 import { BootSequence } from "@/components/custom/boot-sequence";
-import { Footer } from "@/components/custom/footer";
 
 function Router() {
   return (
@@ -31,7 +30,6 @@ function App() {
           <main className="flex-grow">
             <Router />
           </main>
-          <Footer />
           <Toaster />
         </div>
       )}

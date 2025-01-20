@@ -38,63 +38,62 @@ export default function Home() {
   }
 
   return (
-    <>
-      <div className="ps2-container ps2-cursor">
-        {particles.map((particle) => (
-          <div
-            key={particle.id}
-            className="particle"
-            style={{
-              left: `${particle.x}px`,
-              top: `${particle.y}px`,
-              '--direction-x': particle.directionX,
-              '--direction-y': particle.directionY,
-            } as React.CSSProperties}
-          />
-        ))}
+    <div className="ps2-container ps2-cursor min-h-screen flex flex-col">
+      {particles.map((particle) => (
+        <div
+          key={particle.id}
+          className="particle"
+          style={{
+            left: `${particle.x}px`,
+            top: `${particle.y}px`,
+            '--direction-x': particle.directionX,
+            '--direction-y': particle.directionY,
+          } as React.CSSProperties}
+        />
+      ))}
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="absolute top-4 right-4 z-50"
-        >
-          <ThemeToggle />
-        </motion.div>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="absolute top-4 right-4 z-50"
+      >
+        <ThemeToggle />
+      </motion.div>
 
-        <HeroBanner />
+      <HeroBanner />
 
-        <main className="container mx-auto px-4 pt-8 sm:pt-12">
-          <section className="mb-8 sm:mb-12">
-            <SocialWidget />
-          </section>
+      <main className="container mx-auto px-4 pt-8 sm:pt-12 flex-grow">
+        <section className="mb-8 sm:mb-12">
+          <SocialWidget />
+        </section>
 
-          <section className="mb-8 sm:mb-12">
-            <ProfessionalProfile />
-          </section>
+        <section className="mb-8 sm:mb-12">
+          <ProfessionalProfile />
+        </section>
 
-          <section className="mb-8 sm:mb-12">
-            <SkillsTimeline />
-          </section>
+        <section className="mb-8 sm:mb-12">
+          <SkillsTimeline />
+        </section>
 
-          <section className="mb-8 sm:mb-12">
-            <SkillEndorsementCarousel />
-          </section>
+        <section className="mb-8 sm:mb-12">
+          <SkillEndorsementCarousel />
+        </section>
 
-          <section className="mb-8 sm:mb-12">
-            <h2 className="text-xl sm:text-2xl font-bold text-blue-700 dark:text-blue-300 mb-4 sm:mb-6">
-              Work With Me
-            </h2>
-            <div className="max-w-[95%] sm:max-w-2xl mx-auto">
-              <ConsultantAssessment />
-            </div>
-          </section>
+        <section className="mb-8 sm:mb-12">
+          <h2 className="text-xl sm:text-2xl font-bold text-blue-700 dark:text-blue-300 mb-4 sm:mb-6">
+            Work With Me
+          </h2>
+          <div className="max-w-[95%] sm:max-w-2xl mx-auto">
+            <ConsultantAssessment />
+          </div>
+        </section>
 
-          <section className="mb-8 sm:mb-12">
-            <BlogGallery />
-          </section>
-        </main>
-      </div>
-      <Footer />
-    </>
+        <section className="mb-8 sm:mb-12">
+          <BlogGallery />
+        </section>
+      </main>
+
+      {!isLoading && <Footer />}
+    </div>
   );
 }

@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import fetch from "node-fetch";
 import { db } from "@db";
-import { blogPosts } from "@db/schema";
+import { blogPosts, knowledgeBaseFolders, knowledgeBaseFiles } from "@db/schema";
 import { eq } from "drizzle-orm";
 
 interface GitHubStats {
@@ -44,14 +44,11 @@ interface ContactResponse {
   };
 }
 
-// Store submissions in memory (in a production app, this would be in a database)
 const submissions = new Map<string, ContactFormData>();
 
-// Rate limiting configuration
 const RATE_LIMIT_WINDOW = 30 * 1000; // 30 seconds
 const rateLimitStore = new Map<string, { count: number; timestamp: number }>();
 
-// Cleanup old rate limit entries every 5 minutes
 setInterval(() => {
   const now = Date.now();
   for (const [ip, data] of rateLimitStore.entries()) {
@@ -65,7 +62,6 @@ function isRateLimited(ip: string): boolean {
   const now = Date.now();
   const data = rateLimitStore.get(ip) || { count: 0, timestamp: now };
 
-  // Reset counter if window has passed
   if (now - data.timestamp > RATE_LIMIT_WINDOW) {
     data.count = 1;
     data.timestamp = now;
@@ -73,20 +69,45 @@ function isRateLimited(ip: string): boolean {
     return false;
   }
 
-  // Increment counter and check limit
   data.count++;
   rateLimitStore.set(ip, data);
   return data.count > 3; // Allow 3 requests per window
 }
 
 export function registerRoutes(app: Express): Server {
+  // Knowledge Base endpoints
+  app.get('/api/knowledge-base/folders', async (req, res) => {
+    try {
+      const folders = await db.query.knowledgeBaseFolders.findMany({
+        orderBy: (folders, { asc }) => [asc(folders.path)],
+      });
+      res.json(folders);
+    } catch (error) {
+      console.error('Failed to fetch folders:', error);
+      res.status(500).json({ message: 'Failed to fetch folders' });
+    }
+  });
+
+  app.get('/api/knowledge-base/files', async (req, res) => {
+    try {
+      const folderId = req.query.folderId ? parseInt(req.query.folderId as string) : null;
+
+      const files = await db.query.knowledgeBaseFiles.findMany({
+        where: folderId ? eq(knowledgeBaseFiles.folderId, folderId) : undefined,
+      });
+
+      res.json(files);
+    } catch (error) {
+      console.error('Failed to fetch files:', error);
+      res.status(500).json({ message: 'Failed to fetch files' });
+    }
+  });
+
   app.post('/api/contact', async (req, res) => {
     console.log('Received contact form submission:', req.body);
 
-    // Get client IP
     const clientIp = req.ip || req.socket.remoteAddress || 'unknown';
 
-    // Check rate limit
     if (isRateLimited(clientIp)) {
       console.log('Rate limit exceeded for IP:', clientIp);
       return res.status(429).json({
@@ -99,11 +120,9 @@ export function registerRoutes(app: Express): Server {
     try {
       const formData: ContactFormData = req.body;
 
-      // Generate a unique ID for the submission
       const submissionId = Date.now().toString();
       submissions.set(submissionId, formData);
 
-      // Prepare response
       const responseData: ContactResponse = {
         message: 'Message sent successfully',
         submissionId,
@@ -127,7 +146,6 @@ export function registerRoutes(app: Express): Server {
     }
   });
 
-  // GitHub commits endpoint
   app.get('/api/github/commits', async (req, res) => {
     const token = process.env.GITHUB_TOKEN;
     if (!token) {
@@ -188,7 +206,6 @@ export function registerRoutes(app: Express): Server {
     }
   });
 
-  // Add new GitHub stats endpoint
   app.get('/api/github/stats', async (req, res) => {
     const token = process.env.GITHUB_TOKEN;
     if (!token) {
@@ -196,7 +213,6 @@ export function registerRoutes(app: Express): Server {
     }
 
     try {
-      // Fetch user data for followers count
       const userResponse = await fetch(
         'https://api.github.com/user',
         {
@@ -213,7 +229,6 @@ export function registerRoutes(app: Express): Server {
 
       const userData = await userResponse.json() as any;
 
-      // Fetch repositories for repo count and stars
       const reposResponse = await fetch(
         'https://api.github.com/user/repos',
         {
@@ -244,7 +259,6 @@ export function registerRoutes(app: Express): Server {
     }
   });
 
-  // Add new GitHub contributions endpoint
   app.get('/api/github/contributions', async (req, res) => {
     const token = process.env.GITHUB_TOKEN;
     if (!token) {
@@ -252,7 +266,6 @@ export function registerRoutes(app: Express): Server {
     }
 
     try {
-      // Get user's events for the last year
       const response = await fetch(
         'https://api.github.com/users/TiniusTheDev/events',
         {
@@ -269,18 +282,15 @@ export function registerRoutes(app: Express): Server {
 
       const events = await response.json() as any[];
 
-      // Process events into daily contributions
       const contributions = new Map<string, number>();
       const today = new Date();
       const oneYearAgo = new Date(today);
       oneYearAgo.setFullYear(today.getFullYear() - 1);
 
-      // Initialize all dates in the last year with 0 contributions
       for (let d = new Date(oneYearAgo); d <= today; d.setDate(d.getDate() + 1)) {
         contributions.set(d.toISOString().split('T')[0], 0);
       }
 
-      // Count contributions from events
       events.forEach(event => {
         const date = event.created_at.split('T')[0];
         if (contributions.has(date)) {
@@ -288,7 +298,6 @@ export function registerRoutes(app: Express): Server {
         }
       });
 
-      // Convert map to array of objects
       const contributionsArray = Array.from(contributions.entries()).map(([date, count]) => ({
         date,
         count
@@ -302,7 +311,6 @@ export function registerRoutes(app: Express): Server {
   });
 
 
-  // Blog posts endpoints
   app.get('/api/blog/posts', async (req, res) => {
     try {
       const posts = await db.query.blogPosts.findMany({
